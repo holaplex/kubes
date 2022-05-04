@@ -23,6 +23,9 @@ jobs:
             repo=indexer
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
+            if [ -z $git_hash ];then
+              git_hash=$(git ls-remote $url master | cut -c1-7)
+            fi
             app=geyser-consumer
             deployment_file="./$repo/app/$app.yaml"
             version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
