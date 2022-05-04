@@ -8,7 +8,7 @@ spec:
   project: prod-indexer
   source:
     repoURL: https://github.com/holaplex/kubes.git
-    targetRevision: dev
+    targetRevision: main
     path: indexer/app
   destination:
     server: https://kubernetes.default.svc
