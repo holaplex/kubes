@@ -26,5 +26,5 @@ kubectl create secret generic amqp-creds --from-literal=AMQP_URL="amqps://<user>
 
 ### Creating dialect API KEY secret
 ```bash
-kubectl create secret generic dialect-key --from-literal=DIALECT_API_ENDPOINT="https://holaplex.dialectapi.to/v1/wallets/notify" --from-literal=DIALECT_API_KEY="<api-key>"
+kubectl create secret generic dialect-creds --from-literal=DIALECT_API_ENDPOINT="<api-endpoint>" --from-literal=DIALECT_API_KEY="<api-key>"
 ```

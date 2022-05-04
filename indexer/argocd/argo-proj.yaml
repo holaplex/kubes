@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: stage-indexer
+  name: prod-indexer
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,7 +12,7 @@ spec:
   - '*'
   # Only permit applications to deploy to the marketplace namespace in the same cluster
   destinations:
-  - namespace: stage-indexer
+  - namespace: prod-indexer
     server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
@@ -31,17 +31,21 @@ spec:
     kind: ConfigMap
   - group: ''
     kind: Service
-  - group: 'apps'
+  - group: apps
     kind: Deployment
-  - group: 'apps'
+  - group: apps
     kind: StatefulSet
-  - group: 'keda.sh/v1alpha1'
+  - group: keda.sh
+    kind: TriggerAuthentication
+  - group: keda.sh
     kind: ScaledObject
+  - group: networking.k8s.io
+    kind: Ingress
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
-    description: Read-only privileges to stage-indexer
+    description: Read-only privileges to prod-indexer
     policies:
-    - p, proj:stage-indexer:read-only, applications, get, stage-indexer/*, allow
+    - p, proj:prod-indexer:read-only, applications, get, prod-indexer/*, allow
     groups:
     - my-oidc-group

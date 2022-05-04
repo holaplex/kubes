@@ -4,10 +4,21 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
   name: graphql
+  namespace: prod-indexer
 spec:
   ingressClassName: nginx
   rules:
-  - host: graph-test.holaplex.tools
+  - host: graph-test.holaplex.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: graphql
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  - host: graph.holaplex.tools
     http:
       paths:
       - backend:
@@ -19,4 +30,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - graph-test.holaplex.tools
+    - graph.holaplex.tools
+    - graph.holaplex.com
