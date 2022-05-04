@@ -1,0 +1,67 @@
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-rabbitmq-conn
+  namespace: stage-indexer
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: amqp-creds
+      key: AMQP_URL
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: geyser-consumer-scaling
+  namespace: stage-indexer
+spec:
+  scaleTargetRef:
+    name: geyser-consumer
+    #containerName: {container-name}  #Optional. Default: deployment.spec.template.spec.containers[0]
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 1
+  maxReplicaCount: 10
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: mainnet.startup-all.accounts.indexer.staging
+      mode: QueueLength
+      value: "20000"
+      metricName: geyser-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: mainnet.accounts.indexer.staging
+      mode: QueueLength
+      value: "20000"
+      metricName: geyser-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: http-consumer-scaling
+  namespace: stage-indexer
+spec:
+  scaleTargetRef:
+    name: http-consumer
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 5
+  maxReplicaCount: 15
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: mainnet.metadata-json.http.indexer.staging
+      mode: QueueLength
+      value: "3000"
+      metricName: http-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
