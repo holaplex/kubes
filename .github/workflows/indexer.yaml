@@ -20,6 +20,9 @@ jobs:
       - name: Update deployments image versions
         run: |
             git_branch=${GITHUB_REF##*/}
+            if [ "${git_branch}" == "main" ];then
+              git_branch=master
+            fi
             repo=indexer
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
