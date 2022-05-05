@@ -3,6 +3,7 @@ This deployment expects to have a few secrets created:
  - `amqp-creds` with RabbitMQ Endpoint (AMQP_URL)
  - `twitter-creds` with Twitter bearer token
  - `dialect-creds` with Dialect API KEY and Endpoint
+ - `meili-creds` with MeiliSearch API KEY and Endpoint
 
 Deploy those using the commands below before proceeding with the application deployment.
 
@@ -26,5 +27,9 @@ kubectl create secret generic amqp-creds --from-literal=AMQP_URL="amqps://<user>
 
 ### Creating dialect API KEY secret
 ```bash
-kubectl create secret generic dialect-creds --from-literal=DIALECT_API_ENDPOINT="<api-endpoint>" --from-literal=DIALECT_API_KEY="<api-key>"
+kubectl create secret generic dialect-creds --from-literal=DIALECT_API_ENDPOINT="<dialect-endpoint>" --from-literal=DIALECT_API_KEY="<api-key>"
+```
+
+```bash
+kubectl create secret generic meili-creds --from-literal=MEILI_URL="<meilisearch-endpoint>" --from-literal=MEILI_KEY="<api-key>"
 ```
