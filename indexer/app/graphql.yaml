@@ -38,6 +38,18 @@ spec:
               name: twitter-creds
               key: TWITTER_BEARER_TOKEN
               optional: false
+        - name: MEILI_KEY
+          valueFrom:
+            secretKeyRef:
+              name: meili-creds
+              key: MEILI_KEY
+              optional: false
+        - name: MEILI_URL
+          valueFrom:
+            secretKeyRef:
+              name: meili-creds
+              key: MEILI_URL
+              optional: false
         command: ["./bin/holaplex-indexer-graphql"]
         volumeMounts:
         - name: indexer-config
