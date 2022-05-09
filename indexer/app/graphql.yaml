@@ -26,6 +26,18 @@ spec:
       - name: graphql
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-master-3b15928
         env:
+        - name: MEILI_KEY
+          valueFrom:
+            secretKeyRef:
+              name: meili-creds
+              key: MEILI_KEY
+              optional: false
+        - name: MEILI_URL
+          valueFrom:
+            secretKeyRef:
+              name: meili-creds
+              key: MEILI_URL
+              optional: false
         - name: DATABASE_READ_URL
           valueFrom:
             secretKeyRef:
