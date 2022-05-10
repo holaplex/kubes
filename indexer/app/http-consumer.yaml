@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: http-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-master-3b15928
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-master-adf94e1
         env:
         - name: AMQP_URL
           valueFrom:
