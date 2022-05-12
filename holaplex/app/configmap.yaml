@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: hola-config
+data:
+  NODE_ENV: development
+  NEXT_PUBLIC_MARKETPLACE_ENABLED: true
+  NEXT_PUBLIC_IMAGE_CDN_HOST: https://assets.holaplex.tools
+  NEXT_PUBLIC_INDEXER_GRAPHQL_URL: https://graph-test.holaplex.com/v1
+  NEXT_PUBLIC_INDEXER_RPC_URL: https://metaplex-indexer-staging.herokuapp.com/
+  NEXT_PUBLIC_SOLANA_ENDPOINT: https://holaplex.rpcpool.com
+  FEATURED_STOREFRONTS_URL: https://nftstorage.link/ipfs/bafkreifay7aebzkasogdrc2l75tvln45qc5noygi6w5bjkzja2giqw5nzq

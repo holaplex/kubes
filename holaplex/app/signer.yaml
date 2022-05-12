@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: hola-signer
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: hola-signer
+  template:
+    metadata:
+      labels:
+        app: hola-signer
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: hola-config
+        - secretRef:
+            name: hola-secrets
+        name: frontend
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:signer-dev-96d482b
+        imagePullPolicy: IfNotPresent
+        env:
+        - name: CLOUDAMQP_URL
+          valueFrom:
+            secretKeyRef:
+              name: amqp-creds
+              key: AMQP_URL
+              optional: false
+      volumes:
+        - name: hola-config
+          configMap:
+            name: hola-config

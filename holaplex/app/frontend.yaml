@@ -1,0 +1,43 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: hola-frontend
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: hola-frontend
+  template:
+    metadata:
+      labels:
+        app: hola-frontend
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: hola-config
+        - secretRef:
+            name: hola-secrets
+        name: frontend
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:frontend-dev-96d482b
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: hola-frontend
+spec:
+  selector:
+    app: hola-frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP

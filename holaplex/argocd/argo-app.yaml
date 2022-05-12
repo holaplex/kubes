@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: stage-holaplex
+  namespace: argocd
+spec:
+  project: stage-holaplex
+  source:
+    repoURL: https://github.com/holaplex/holaplex.git
+    targetRevision: dev
+    path: holaplex
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: stage-holaplex
