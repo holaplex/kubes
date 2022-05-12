@@ -11,17 +11,6 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: www.holaplex.dev
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: hola-frontend
-              port:
-                number: 3000
-
   - host: holaplex.dev
     http:
       paths:
@@ -32,8 +21,40 @@ spec:
               name: hola-frontend
               port:
                 number: 3000
+  - host: '*.holaplex.dev'
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hola-frontend
+              port:
+                number: 3000
+  - host: hola.dev.holaplex.tools
+    http:
+      paths:
+      - backend:
+          service:
+            name: hola-frontend
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
+  - host: '*.hola.dev.holaplex.tools'
+    http:
+      paths:
+      - backend:
+          service:
+            name: hola-frontend
+            port:
+              number: 3000
+        path: /
+        pathType: Prefix
   tls:
   - hosts:
-    - www.holaplex.dev
     - holaplex.dev
+    - '*.holaplex.dev'
+    - hola.dev.holaplex.tools
+    - '*.hola.dev.holaplex.tools'
     secretName: dev-hola-frontend-tls
