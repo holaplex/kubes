@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: graphql
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-dev-a57b6dc
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-dev-f6b82eb
         env:
         - name: DATABASE_READ_URL
           valueFrom:
