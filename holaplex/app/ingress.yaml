@@ -7,7 +7,7 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
     nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
   name: hola-frontend
-  namespace: dev-holaplex
+  namespace: stage-holaplex
 spec:
   ingressClassName: nginx
   rules:

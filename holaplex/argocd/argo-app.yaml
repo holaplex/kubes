@@ -6,9 +6,9 @@ metadata:
 spec:
   project: stage-holaplex
   source:
-    repoURL: https://github.com/holaplex/holaplex.git
+    repoURL: https://github.com/holaplex/kubes.git
     targetRevision: dev
-    path: holaplex
+    path: holaplex/app
   destination:
     server: https://kubernetes.default.svc
     namespace: stage-holaplex
