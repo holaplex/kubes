@@ -10,3 +10,4 @@ data:
   ARWEAVE_URL: https://arweave.net
   ASSET_PROXY_COUNT: "5"
   ASSET_PROXY_ENDPOINT: https://assets[n].holaplex.tools/
+  UPSERT_BATCH: "50000"
