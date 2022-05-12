@@ -65,3 +65,26 @@ spec:
       metricName: http-consumer-scaling
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: search-consumer-scaling
+  namespace: prod-indexer
+spec:
+  scaleTargetRef:
+    name: search-consumer
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: mainnet.search.indexer
+      mode: QueueLength
+      value: "25000"
+      metricName: search-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
