@@ -11,4 +11,4 @@ data:
   ASSET_PROXY_COUNT: "5"
   ASSET_PROXY_ENDPOINT: https://assets[n].holaplex.tools/
   UPSERT_BATCH: "100000"
-  UPSERT_INTERVAL: "60"
+  UPSERT_INTERVAL: "180"

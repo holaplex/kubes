@@ -32,5 +32,5 @@ kubectl create secret generic dialect-creds --from-literal=DIALECT_API_ENDPOINT=
 
 ### Creating Meilisearch secret
 ```bash
-kubectl create secret generic meili-creds --from-literal=MEILI_URL="<meilisearch-endpoint>" --from-literal=MEILI_KEY="<api-key>"
+kubectl create secret generic meili-creds --from-literal=MEILI_URL="http://meilisearch.prod-meilisearch.svc.cluster.local:7700" --from-literal=MEILI_KEY="<api-key>"
 ```
