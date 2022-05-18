@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: geyser-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-8dfa6ec
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-ece3de2
         env:
         - name: AMQP_URL
           valueFrom:
