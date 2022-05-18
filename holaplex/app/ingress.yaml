@@ -7,11 +7,11 @@ metadata:
     nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
     nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
   name: hola-frontend
-  namespace: stage-holaplex
+  namespace: canary-holaplex
 spec:
   ingressClassName: nginx
   rules:
-  - host: holaplex.dev
+  - host: canary.holaplex.com
     http:
       paths:
         - path: /
@@ -21,7 +21,7 @@ spec:
               name: hola-frontend
               port:
                 number: 3000
-  - host: '*.holaplex.dev'
+  - host: '*.canary.holaplex.com'
     http:
       paths:
         - path: /
@@ -31,30 +31,9 @@ spec:
               name: hola-frontend
               port:
                 number: 3000
-  - host: hola.dev.holaplex.tools
-    http:
-      paths:
-      - backend:
-          service:
-            name: hola-frontend
-            port:
-              number: 3000
-        path: /
-        pathType: Prefix
-  - host: '*.hola.dev.holaplex.tools'
-    http:
-      paths:
-      - backend:
-          service:
-            name: hola-frontend
-            port:
-              number: 3000
-        path: /
-        pathType: Prefix
+
   tls:
   - hosts:
-    - holaplex.dev
-    - '*.holaplex.dev'
-    - hola.dev.holaplex.tools
-    - '*.hola.dev.holaplex.tools'
-    secretName: dev-hola-frontend-tls
+    - canary.holaplex.com
+    - '*.canary.holaplex.com'
+    secretName: canary-hola-frontend-tls

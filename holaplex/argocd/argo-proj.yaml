@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: stage-holaplex
+  name: canary-holaplex
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,7 +12,7 @@ spec:
   - '*'
   # Only permit applications to deploy to the holaplex namespace in the same cluster
   destinations:
-  - namespace: stage-holaplex
+  - namespace: canary-holaplex
     server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
@@ -40,8 +40,8 @@ spec:
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
-    description: Read-only privileges to stage-holaplex
+    description: Read-only privileges to canary-holaplex
     policies:
-    - p, proj:stage-holaplex:read-only, applications, get, stage-holaplex/*, allow
+    - p, proj:canary-holaplex:read-only, applications, get, canary-holaplex/*, allow
     groups:
     - my-oidc-group

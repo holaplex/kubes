@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: stage-holaplex
+  name: canary-holaplex
   namespace: argocd
 spec:
-  project: stage-holaplex
+  project: canary-holaplex
   source:
     repoURL: https://github.com/holaplex/kubes.git
-    targetRevision: dev
+    targetRevision: canary
     path: holaplex/app
   destination:
     server: https://kubernetes.default.svc
-    namespace: stage-holaplex
+    namespace: canary-holaplex
