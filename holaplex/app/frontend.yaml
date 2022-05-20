@@ -25,7 +25,7 @@ spec:
         - secretRef:
             name: hola-secrets
         name: frontend
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:frontend-dev-0972813
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:frontend-dev-27b5e2b
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
