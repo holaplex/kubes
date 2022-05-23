@@ -24,7 +24,7 @@ spec:
     spec:
       containers:
       - name: graphql
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-master-715e964
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-master-bed96e6
         env:
         - name: MEILI_KEY
           valueFrom:
