@@ -11,6 +11,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+  - host: www.holaplex.dev
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hola-frontend
+              port:
+                number: 3000
+
   - host: holaplex.dev
     http:
       paths:
