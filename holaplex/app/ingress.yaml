@@ -21,40 +21,7 @@ spec:
               name: hola-frontend
               port:
                 number: 3000
-  - host: '*.holaplex.dev'
-    http:
-      paths:
-        - path: /
-          pathType: Prefix
-          backend:
-            service:
-              name: hola-frontend
-              port:
-                number: 3000
-  - host: hola.dev.holaplex.tools
-    http:
-      paths:
-      - backend:
-          service:
-            name: hola-frontend
-            port:
-              number: 3000
-        path: /
-        pathType: Prefix
-  - host: '*.hola.dev.holaplex.tools'
-    http:
-      paths:
-      - backend:
-          service:
-            name: hola-frontend
-            port:
-              number: 3000
-        path: /
-        pathType: Prefix
   tls:
   - hosts:
     - holaplex.dev
-    - '*.holaplex.dev'
-    - hola.dev.holaplex.tools
-    - '*.hola.dev.holaplex.tools'
     secretName: dev-hola-frontend-tls
