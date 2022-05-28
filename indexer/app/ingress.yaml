@@ -8,7 +8,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: graph-test.holaplex.com
+  - host: graph.holaplex.com
     http:
       paths:
       - backend:
