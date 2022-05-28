@@ -7,6 +7,17 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
+  - host: graph-test.holaplex.com
+    http:
+      paths:
+      - backend:
+          service:
+            name: graphql
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+
   - host: graph-test.holaplex.tools
     http:
       paths:
@@ -20,3 +31,4 @@ spec:
   tls:
   - hosts:
     - graph-test.holaplex.tools
+    - graph-test.holaplex.com
