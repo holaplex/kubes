@@ -17,7 +17,6 @@ spec:
               number: 80
         path: /
         pathType: Prefix
-
   - host: graph-test.holaplex.tools
     http:
       paths:
@@ -30,5 +29,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - graph-test.holaplex.tools
     - graph-test.holaplex.com
+    - graph-test.holaplex.tools
