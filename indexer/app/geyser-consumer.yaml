@@ -36,8 +36,6 @@ spec:
               name: dialect-creds
               key: DIALECT_API_KEY
               optional: false
-        - name: STAGING
-          value: ""
         - name: DIALECT_API_ENDPOINT
           valueFrom:
             secretKeyRef:
