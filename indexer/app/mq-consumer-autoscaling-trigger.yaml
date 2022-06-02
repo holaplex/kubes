@@ -27,7 +27,7 @@ spec:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.startup-all.accounts.indexer.staging
+      queueName: mainnet.startup-all.accounts.indexer
       mode: QueueLength
       value: "20000"
       metricName: geyser-consumer-scaling
@@ -36,7 +36,7 @@ spec:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.accounts.indexer.staging
+      queueName: mainnet.accounts.indexer
       mode: QueueLength
       value: "20000"
       metricName: geyser-consumer-scaling
@@ -59,7 +59,7 @@ spec:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.metadata-json.http.indexer.staging
+      queueName: mainnet.metadata-json.http.indexer
       mode: QueueLength
       value: "3000"
       metricName: http-consumer-scaling
