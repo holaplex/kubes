@@ -1,0 +1,43 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: legacy-storefronts
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  schedule: "*/10 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: legacy-storefronts
+      containers:
+      - name: legacy-storefronts
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:legacy-storefronts-dev-53442a5
+        env:
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds-url
+              key: DATABASE_WRITE_URL
+              optional: false
+        command: ["/bin/bash","-c"]
+        args: ["./bin/holaplex-indexer-legacy-storefronts"]
+        volumeMounts:
+        - name: indexer-config
+          mountPath: .env.local
+        securityContext:
+          allowPrivilegeEscalation: false
+        imagePullPolicy: IfNotPresent
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "3"
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+      volumes:
+        - name: indexer-config
+          configMap:
+            name: indexer-config
