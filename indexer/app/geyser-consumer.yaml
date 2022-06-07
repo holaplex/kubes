@@ -1,7 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
   name: geyser-consumer
   annotations:
     reloader.stakater.com/auto: "true"
