@@ -31,12 +31,20 @@ spec:
     kind: ConfigMap
   - group: ''
     kind: Service
-  - group: 'apps'
+  - group: apps
     kind: Deployment
-  - group: 'apps'
+  - group: apps
     kind: StatefulSet
-  - group: 'keda.sh/v1alpha1'
+  - group: keda.sh
+    kind: TriggerAuthentication
+  - group: keda.sh
     kind: ScaledObject
+  - group: networking.k8s.io
+    kind: Ingress
+  - group: batch
+    kind: CronJob
+
+
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
