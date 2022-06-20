@@ -24,7 +24,7 @@ spec:
         - configMapRef:
             name: indexer-config
         name: search-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:search-consumer-dev-6064478
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:search-consumer-dev-3db0c6f
         env:
         - name: AMQP_URL
           valueFrom:
