@@ -37,7 +37,7 @@ jobs:
             deployment_file="./$repo/app/$app.yaml"
             version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
             echo "Updating ${app} deployment with new image tag"
-            sed -i "s/$version/$app-$git_branch-$git_hash/" $deployment_file
+            sed -i "s/$version/$app-$git_branch-$git_hash/g" $deployment_file
             #GraphQL server
             app=graphql
             deployment_file="./$repo/app/$app.yaml"
