@@ -25,7 +25,7 @@ spec:
         - secretRef:
             name: hola-secrets
         name: frontend
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:signer-canary-289f7aa
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:signer-canary-ee20e80
         imagePullPolicy: IfNotPresent
         env:
         - name: CLOUDAMQP_URL
