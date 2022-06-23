@@ -367,8 +367,7 @@ kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace 
 # Indexer
 
 ### Building the docker images and pushing to local registry
-Clone the indexer repo and cd into the folder
-
+Run the `build_images.sh` script to clone the indexer stack repository and build the docker images.
 ```bash
 registry=registry.$domain ./indexer/build_images.sh
 ```
