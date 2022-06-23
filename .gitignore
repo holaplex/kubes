@@ -1,0 +1,3 @@
+./indexer/indexer-stack
+./indexer-geyser-plugin
+./validator/mainnet-beta/geyser-config.json
