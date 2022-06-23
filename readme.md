@@ -96,7 +96,7 @@ Install `k3s` using command below. This will start `k3s` as server.
 curl -sfL https://get.k3s.io | sh -s - server --no-deploy traefik servicelb --tls-san k3s.holaplex.tools --https-listen-port 6443
 ```
 
-Retrieve your `kubectl` config from `/etc/rancher/k3s/k3s.yaml`, move it to your home `/.kube` folder.
+Retrieve your `kubectl` config from `/etc/rancher/k3s/k3s.yaml`, move it to your home `~/.kube` folder.
 Select your Kube configuration by changing your `KUBECONFIG` env var.
 ```bash
 mkdir -p ~/.kube && sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/k3s-indexer
@@ -143,6 +143,9 @@ kubectl wait pod --for=condition=Ready --timeout 60s -n ingress-nginx -l app.kub
 ```
 
 # Cert Manager
+
+Get the latest version from the releases page and install with `helm`.
+
 ```bash
 latest=$(curl -s https://api.github.com/repos/cert-manager/cert-manager/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
 helm repo add jetstack https://charts.jetstack.io
@@ -155,15 +158,20 @@ helm upgrade --install \
   --version $latest
 ```
 
-# LetsEncrypt Issuers (Only if you need SSL Certs for your ingresses)
+# LetsEncrypt Certificate Issuers
+This step is required *only if you need SSL Certs for your ingresses*.
 ```bash
 #Email address to use for cert renewal notifications
 email="mariano@holaplex.com"
 sed "s#YOUR_EMAIL#${email}#g" ./cert-manager/certissuers/letsencrypt.yaml | kubectl apply -f -
 ```
 
-# Docker registry (skip if using any other public registry for your indexer images)
-First we need a `registry` namespace.
+# Docker registry
+This step can be skipped if you are using any other public registry for your indexer images.
+
+### Deploying
+First we need a namespace for our Docker registry deployment.
+
 ```bash
 kubectl create namespace registry
 ```
@@ -233,7 +241,8 @@ helm install keda kedacore/keda --namespace keda --create-namespace
 ```
 
 # Meilisearch
-Add the Helm repo and update.
+Search backend for the indexer.
+Add the Meilisearch Helm repo.
 
 ```bash
 helm repo add meilisearch https://meilisearch.github.io/meilisearch-kubernetes
@@ -362,7 +371,7 @@ Clone the indexer repo and cd into the folder
 registry=registry.$domain ./indexer/build_images.sh
 ```
 
-### Deploying to indexer stack
+### Deploying the indexer stack
 Before deploying, please setup your credentials by following [this readme](indexer/app/readme.md). *TLDR* version with some dummy values can be found below.
 Move to the `indexer` namespace
 
@@ -413,8 +422,6 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     external-dns.alpha.kubernetes.io/hostname: graph.$domain
-  labels:
-    argocd.argoproj.io/instance: stage-indexer
   name: graphql
 spec:
   ingressClassName: nginx
@@ -432,7 +439,7 @@ spec:
   tls:
   - hosts:
     - graph.$domain
-    secretName: validator-tls
+    secretName: graphql-tls
 EOF
 ```
 
@@ -482,19 +489,6 @@ echo "/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
 Restart the instance
 ```bash
 sudo shutdown -r now
-```
-
-Connect to the validator through SSH and join the node to the existing cluster.
-
-```bash
-#Download k3s and run join command.
-
-#Retrieve kubeconfig
-
-#download kubectl
-
-#Test kubectl
-
 ```
 
 Tag a node as a validator node in Kubernetes.
