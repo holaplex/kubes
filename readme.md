@@ -14,7 +14,7 @@ Disclaimer: The deployment is not meant to be used in production as it lacks of 
 - NGINX ingress controller
 - Cert-Manager -with LetsEncrypt- (Optional)
 - Keda (Optional)
-- Example site using indexed data [Holaplex.com](https://github.com/holaplex/holaplex)
+- Example site using indexed data [Holaplex.com](https://github.com/holaplex/holaplex) [todo]
 
 ## Minimum hardware requirements
 Hardware requirements are only as a guide to get a stable deployment. You can probably get away with deploying everything on a smaller VM if testing.
@@ -46,12 +46,6 @@ Steps to install all dependencies is described in the following steps.
 Create a Ubuntu 20.04 VM or spin up a cloud instance in your favourite provider and login as root trough SSH.
 Commands below will add the Docker package repository and install some required OS dependencies.
 
-If you trust me enough to `curl | bash` there's an auto-deploy script available at: `deploy.holaplex.tools`.
-The script can also be found in [scripts](scripts) folder (This won't deploy the Solana node).
-
-```bash
-curl -sfL https://deploy.holaplex.tools | sh -s -
-```
 
 ```bash
 # Installing Docker and jq
@@ -579,8 +573,8 @@ kubectl create cm geyser-plugin-config --from-file=./$network/geyser-config.json
 
 ### Deploy the validator
 
-Create a mount folder for the validator data and set the variable `validator_data_path` accordingly.  
-Ideally, you'll use a separate SSD for the ledger.   
+Create a mount folder for the validator data and set the variable `validator_data_path` accordingly.
+Ideally, you'll use a separate SSD for the ledger.
 ```bash
 validator_data_path="/mnt/p3600/validator/$network"
 sudo mkdir -p $validator_data_path && sudo chown $USER:$USER $validator_data_path
@@ -768,4 +762,4 @@ kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/late
 ```
 
 
-More advanced monitoring deployments will be added in the future, using Prometheus, Grafana and some sweet dashboards.  
+More advanced monitoring deployments will be added in the future, using Prometheus, Grafana and some sweet dashboards.
