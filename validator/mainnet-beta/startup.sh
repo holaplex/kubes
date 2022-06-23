@@ -1,0 +1,26 @@
+solana-validator  \
+--identity=/root/validator-keypair.json \
+--no-os-network-limits-test \
+--no-port-check \
+--log=- \
+--accounts=/root/accounts \
+--trusted-validator=7Np41oeYqPefeNQEHSv1UDhYrehxin3NStELsSKCT4K2 \
+--trusted-validator=GdnSyH3YtwcxFvQrVVJMm1JhTS4QVX7MFsX56uJLUfiZ \
+--trusted-validator=DE1bawNcRJB9rVm3buyMVfr8mBEoyyu73NBovf2oXJsJ \
+--trusted-validator=CakcnaRDHka2gXyfbEd2d3xsvkJkqsLw2akB3zsN1D2S \
+--ledger=ledger \
+--rpc-port=8899 \
+--entrypoint=entrypoint.mainnet-beta.solana.com:8001 \
+--entrypoint=entrypoint2.mainnet-beta.solana.com:8001 \
+--entrypoint=entrypoint3.mainnet-beta.solana.com:8001 \
+--entrypoint=entrypoint4.mainnet-beta.solana.com:8001 \
+--entrypoint=entrypoint5.mainnet-beta.solana.com:8001 \
+--private-rpc \
+--no-untrusted-rpc \
+--no-voting \
+--dynamic-port-range=8000-8013 \
+--expected-genesis-hash=5eykt4UsFv8P8NJdTREpY1vzqKqZKvdpKuc147dw2N9d \
+--wal-recovery-mode=skip_any_corrupted_record \
+--geyser-plugin-config=/root/geyser-config.json \
+--limit-ledger-size \
+--enable-rpc-transaction-history

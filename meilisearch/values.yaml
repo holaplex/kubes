@@ -1,0 +1,96 @@
+# Default values for <CHARTNAME>.
+# This is a YAML-formatted file.
+# Declare variables to be passed into your templates.
+
+replicaCount: 1
+
+readinessProbe:
+  periodSeconds: 60
+  InitialDelaySeconds: 60
+
+livenessProbe:
+  periodSeconds: 60
+  InitialDelaySeconds: 60
+
+image:
+  repository: getmeili/meilisearch
+  tag: v0.27.0
+  pullPolicy: IfNotPresent
+  pullSecret:
+
+nameOverride: ""
+fullnameOverride: ""
+
+# Environment loaded into the configMap
+environment:
+  MEILI_NO_ANALYTICS: true
+  MEILI_ENV: production
+  MEILI_MAX_INDEXING_MEMORY: "8589934592"
+  MEILI_HTTP_PAYLOAD_SIZE_LIMIT: "404857600"
+  MEILI_DB_PATH: "/data/data.ms/"
+  MEILI_SNAPSHOT_DIR: "/data/snapshots/"
+  MEILI_MAX_INDEX_SIZE: "107374182400"
+  MEILI_MAX_INDEXING_THREADS: "4"
+  # For production deployment, the environment MEILI_MASTER_KEY is required.
+  # If MEILI_ENV is set to "production" without setting MEILI_MASTER_KEY, this
+  # chart will automatically create a secure MEILI_MASTER_KEY and push it as a
+  # secret. Otherwise the below value of MEILI_MASTER_KEY will be used instead.
+  #MEILI_MASTER_KEY:
+auth:
+  # Use an existing Kubernetes secret for the MEILI_MASTER_KEY
+  existingMasterKeySecret: meili-master-key
+
+serviceAccount:
+  # You can use a specific pre-created service account instead of
+  # the one created by this chart.
+  # Set create to false to prevent creating a service account and use your own.
+  create: true
+  name: ''
+  annotations: {}
+
+podAnnotations: {}
+
+customLabels: {}
+
+service:
+  type: ClusterIP
+  port: 7700
+  annotations: {}
+
+container:
+  containerPort: 7700
+
+persistence:
+  enabled: true
+  accessMode: ReadWriteOnce
+  ## Persistent Volume Storage Class
+  ## If defined, storageClassName: <storageClass>
+  ## If set to "-", storageClassName: "", which disables dynamic provisioning
+  ## If undefined (the default) or set to null, no storageClassName spec is
+  ##   set, choosing the default provisioner.  (gp2 on AWS, standard on
+  ##   GKE, AWS & OpenStack)
+  ##
+  # storageClass: "-"
+  size: 500Gi
+  annotations: {}
+  volume:
+    name: data
+    mountPath: /data
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+  #  memory: 128Mi
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}

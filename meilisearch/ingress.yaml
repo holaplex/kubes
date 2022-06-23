@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    external-dns.alpha.kubernetes.io/hostname: search.YOUR_DOMAIN
+    nginx.ingress.kubernetes.io/proxy-body-size: "0"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
+  name: meilisearch
+  namespace: meilisearch
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: search.YOUR_DOMAIN
+    http:
+      paths:
+      - backend:
+          service:
+            name: meilisearch
+            port:
+              number: 7700
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - search.YOUR_DOMAIN
+    secretName: meilisearch-tls
