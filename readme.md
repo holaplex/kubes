@@ -270,6 +270,11 @@ Endpoint will be `search.$domain`
 
 # Postgres
 
+Clone Zalando's Postgres operator repo
+```bash
+git clone https://github.com/zalando/postgres-operator
+```
+
 ### Install Postgres operator
 helm upgrade --install postgres-operator --create-namespace ./postgres-operator/charts/postgres-operator -n postgres-system
 helm upgrade --install postgres-operator-ui ./postgres-operator/charts/postgres-operator-ui -n postgres-system
