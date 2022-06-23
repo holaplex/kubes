@@ -285,8 +285,10 @@ git clone https://github.com/zalando/postgres-operator
 ```
 
 ### Install Postgres operator
+```bash
 helm upgrade --install postgres-operator --create-namespace ./postgres-operator/charts/postgres-operator -n postgres-system
 helm upgrade --install postgres-operator-ui ./postgres-operator/charts/postgres-operator-ui -n postgres-system
+```
 
 Create a namespace for the `indexer` stack.
 The Postgres cluster will be deployed there. This will only deploy 1 postgres instance unless modified in the variables below.
@@ -300,7 +302,7 @@ kubectl config set-context --current --namespace=$namespace
 
 ### Deploy your postgres cluster
 Configure variables
-```bash
+```toml
 team=holaplex
 app=indexer
 db_cluster_name=indexerdb
@@ -529,7 +531,7 @@ kubectl create cm ca-certificates --from-file=ca-certificates.crt
 ```
 
 ### Create geyser-config configmap
-```json
+```bash
 cat <<EOF>> ./$network/geyser-config.json
 {
   "amqp": {
@@ -567,6 +569,9 @@ cat <<EOF>> ./$network/geyser-config.json
   "instructionPrograms": []
 }
 EOF
+```
+Create the configMap.  
+```bash
 kubectl create cm geyser-plugin-config --from-file=./$network/geyser-config.json
 ```
 
