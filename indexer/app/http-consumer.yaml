@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: store-config-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-f072451
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-8fb3ac7
         env:
         - name: AMQP_URL
           valueFrom:
@@ -45,7 +45,7 @@ spec:
         imagePullPolicy: IfNotPresent
 
       - name: http-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-f072451
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-8fb3ac7
         env:
         - name: AMQP_URL
           valueFrom:
