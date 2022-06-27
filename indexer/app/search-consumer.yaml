@@ -50,7 +50,6 @@ spec:
               name: postgres-creds-url
               key: DATABASE_WRITE_URL
               optional: false
-
         command: ["/bin/bash","-c"]
         args: ["./bin/holaplex-indexer-search --sender mainnet"]
         securityContext:
