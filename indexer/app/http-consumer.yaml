@@ -83,7 +83,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-http --entity metadata-json --sender mainnet --backfill-search true"]
+        args: ["./bin/holaplex-indexer-http --entity metadata-json --sender mainnet --backfill-search"]
         volumeMounts:
         - name: indexer-config
           mountPath: .env.local
