@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: store-config-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-a75353d
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-4272d8c
         env:
         - name: MEILI_KEY
           valueFrom:
@@ -56,7 +56,7 @@ spec:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
       - name: http-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-a75353d
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-4272d8c
         env:
         - name: MEILI_KEY
           valueFrom:
