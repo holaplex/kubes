@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: cm-factory
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: cm-factory
+  template:
+    metadata:
+      labels:
+        app: cm-factory
+    spec:
+      containers:
+      - name: cm-factory
+        env:
+        - name: APP_ENV
+          value: development
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/cm-factory:main-a849579
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 3000

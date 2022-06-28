@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-cm-factory
+  namespace: argocd
+spec:
+  project: prod-cm-factory
+  source:
+    repoURL: https://github.com/holaplex/kubes.git
+    targetRevision: main
+    path: cm-factory/app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod-cm-factory
