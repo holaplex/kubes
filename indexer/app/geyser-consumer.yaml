@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: geyser-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-multi-spl-token-409d3a7
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-multi-spl-token-aa5f12f
         env:
         - name: MEILI_KEY
           valueFrom:
@@ -41,6 +41,8 @@ spec:
               name: amqp-creds
               key: AMQP_URL
               optional: false
+        - name: STAGING
+          value: ""
         - name: DIALECT_API_KEY
           valueFrom:
             secretKeyRef:
