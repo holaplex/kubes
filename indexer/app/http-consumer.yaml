@@ -78,6 +78,8 @@ spec:
               name: amqp-creds
               key: AMQP_URL
               optional: false
+        - name: STAGING
+          value: ""
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
