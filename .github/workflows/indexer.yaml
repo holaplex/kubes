@@ -2,7 +2,7 @@ name: Remote build
 
 on:
   push:
-    branches: [ main, dev ]
+    branches: [ main, dev, anshul/multi-spl-token ]
 
   workflow_dispatch:
 
@@ -23,6 +23,9 @@ jobs:
             repo=indexer
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
+            if [ $git_branch = anshul/multi-spl-token ];then
+                git_branch = multi-spl-token
+            fi
             #Geyser Consumer
             app=geyser-consumer
             deployment_file="./$repo/app/$app.yaml"
