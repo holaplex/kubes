@@ -3,7 +3,7 @@ apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
   name: keda-trigger-auth-rabbitmq-conn
-  namespace: stage-indexer
+  namespace: anshul-indexer
 spec:
   secretTargetRef:
     - parameter: host
@@ -14,7 +14,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: geyser-consumer-scaling
-  namespace: stage-indexer
+  namespace: anshul-indexer
 spec:
   scaleTargetRef:
     name: geyser-consumer
@@ -47,7 +47,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: http-consumer-scaling
-  namespace: stage-indexer
+  namespace: anshul-indexer
 spec:
   scaleTargetRef:
     name: http-consumer
@@ -70,7 +70,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: search-consumer-scaling
-  namespace: stage-indexer
+  namespace: anshul-indexer
 spec:
   scaleTargetRef:
     name: search-consumer
