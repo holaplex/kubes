@@ -92,8 +92,9 @@ Check [nip.io](https://nip.io) for more info on how this works.
 
 Install `k3s` using command below. This will start `k3s` as server.
 ```bash
+domain=indexer.solar
 #If you want to save your cluster data in a different path, add --data-dir /path/k3s
-curl -sfL https://get.k3s.io | sh -s - server --no-deploy traefik servicelb --tls-san k3s.holaplex.tools --https-listen-port 6443
+curl -sfL https://get.k3s.io | sh -s - server --no-deploy traefik servicelb --tls-san k3s.$domain --https-listen-port 6443
 ```
 
 Retrieve your `kubectl` config from `/etc/rancher/k3s/k3s.yaml`, move it to your home `~/.kube` folder.
@@ -122,7 +123,8 @@ kubectl apply -f ./metallb/namespace.yaml
 Retrieve your IP address and apply the below MetalLB `configMap`
 
 ```bash
-addresses=$(ip -4 addr show <your-network-interface>| grep -oP '(?<=inet\s)\d+(\.\d+){3}')
+nic=eth1
+addresses=$(ip -4 addr show $nic | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
 sed "s#LB_ADDRESSES#${addresses}#g" ./metallb/configMap.yaml | kubectl apply -f -
 ```
 
@@ -164,6 +166,12 @@ This step is required *only if you need SSL Certs for your ingresses*.
 #Email address to use for cert renewal notifications
 email="mariano@holaplex.com"
 sed "s#YOUR_EMAIL#${email}#g" ./cert-manager/certissuers/letsencrypt.yaml | kubectl apply -f -
+```
+
+# External DNS
+```bash
+latest=$(curl -s https://api.github.com/repos/kubernetes-sigs/external-dns/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
+sed "s#YOUR_ZONE_ID#${cloudflare_zone_id}#g;s#YOUR_API_TOKEN#${cloudflare_api_token}#g" ./external-dns/deploy.yaml | kubectl apply -f  -
 ```
 
 # Docker registry
@@ -361,7 +369,12 @@ Your Postgres instance should show its status as `Running`
 
 Create `indexer` database in Postgres
 ```bash
-kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace --restart='Never' --image docker.io/bitnami/postgresql:14-debian-10 -- psql $(echo $DATABASE_URL | sed 's/\/indexer//g') -c "create database indexer"
+#Retrieve PostgresQL password
+export PGPASSWORD=$(kubectl get secret $db_user.$team-$db_cluster_name.credentials.postgresql.acid.zalan.do -o 'jsonpath={.data.password}' | base64 -d)
+#Retrieve Database_url
+export DATABASE_URL="postgres://$db_user:$PGPASSWORD@$team-$db_cluster_name.$namespace.svc:5432/$db_name"
+#Create the Database
+kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace --restart='Never' --env PGPASSWORD=$PGPASSWORD --image docker.io/bitnami/postgresql:14-debian-10 -- psql $(echo $DATABASE_URL | sed 's/\/indexer//g') -c "create database $db_name"
 ```
 
 # Indexer
@@ -423,6 +436,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
     external-dns.alpha.kubernetes.io/hostname: graph.$domain
+    cert-manager.io/cluster-issuer: letsencrypt-prod
   name: graphql
 spec:
   ingressClassName: nginx
@@ -470,7 +484,7 @@ sudo bash -c "cat >/etc/sysctl.d/20-solana-mmaps.conf <<EOF
 vm.max_map_count = 1000000
 EOF"
 sudo sysctl -p /etc/sysctl.d/20-solana-mmaps.conf
-sudo bash -c "echo -en [Services]\\nDefaultLimitNOFILE=1000000 >> /etc/systemd/system.conf"
+#sudo bash -c "echo -en [Services]\\nDefaultLimitNOFILE=1000000 >> /etc/systemd/system.conf"
 echo -en "DefaultLimitNOFILE=1000000" | sudo tee -a /etc/systemd/system.conf
 sudo systemctl daemon-reload
 sudo bash -c "cat >/etc/security/limits.d/90-solana-nofiles.conf <<EOF
@@ -507,8 +521,8 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH" >> $HOM
 
 ### Generate a validator and vote-account keypair.
 ```bash
-#chose devnet or mainnet-beta
-network="mainnet-beta"
+#chose devnet or mainnet
+network="mainnet"
 namespace="$network-solana"
 kubectl create ns $namespace
 #Move to the validator namespace
@@ -569,7 +583,7 @@ cat <<EOF>> ./$network/geyser-config.json
 }
 EOF
 ```
-Create the configMap.  
+Create the configMap.
 ```bash
 kubectl create cm geyser-plugin-config --from-file=./$network/geyser-config.json
 ```
@@ -633,7 +647,6 @@ metadata:
   labels:
     app: geyser-plugin
 spec:
- storageClassName: ""
  accessModes:
    - ReadWriteOnce
  resources:
@@ -734,7 +747,7 @@ Get the plugin from the container and upload it to the validator pod
 ```bash
 container_id=$(docker run -d geyser-plugin-builder:latest sleep 300)
 docker cp $container_id:/tmp/libholaplex_indexer_rabbitmq_geyser.so .
-pod_name=$(kubectl get pods -n $namespace --no-headers | awk {'print $1'})
+pod_name=$(kubectl get pods -n $namespace --no-headers | grep validator | awk {'print $1'})
 kubectl cp -c geyser-plugin-loader libholaplex_indexer_rabbitmq_geyser.so $namespace/$pod_name:/geyser
 ```
 

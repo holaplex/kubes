@@ -28,7 +28,7 @@ spec:
         - name: geyser-plugin-loader
           image: busybox
           command: ["/bin/sh", "-c"]
-          args: ["while [[ ! -f /geyser/libholaplex_indexer_rabbitmq_geyser.so ]];do echo -e 'waiting for geyser plugin\nCopy from local using:\n kubectl cp -c geyser-plugin-loader libholaplex_indexer_rabbitmq_geyser.so mainnet-beta-solana/validator_pod_name:/geyser';sleep 10;done;rm -f /ledger/ledger.lock"]
+          args: ["while [[ ! -f /geyser/libholaplex_indexer_rabbitmq_geyser.so ]];do echo -e 'waiting for geyser plugin\nCopy from local using:\n kubectl cp -c geyser-plugin-loader libholaplex_indexer_rabbitmq_geyser.so mainnet-solana/validator_pod_name:/geyser';sleep 10;done;rm -f /ledger/ledger.lock"]
           volumeMounts:
           - name: geyser-plugin
             mountPath: /geyser
@@ -42,7 +42,7 @@ spec:
         - name: SSL_CERT_DIR
           value: /etc/ssl/certs
         - name: SOLANA_METRICS_CONFIG
-          value: "host=http://influxdb-influxdb2.monitoring,db=mainnet-beta,u=solana,p=your-custom-pw"
+          value: "host=http://influxdb-influxdb2.monitoring,db=mainnet,u=solana,p=YOUR_INFLUXDB_PW"
         - name: SOLANA_NETWORK
           value: mainnet-beta
         volumeMounts:
@@ -67,7 +67,7 @@ spec:
         - name: SOLANA_SNAPSHOT_COMPRESSION
           value: none
         - name: SOLANA_METRICS_CONFIG
-          value: "host=http://influxdb-influxdb2.monitoring,db=mainnet-beta,u=solana,p=your-custom-pw"
+          value: "host=http://influxdb-influxdb2.monitoring,db=mainnet,u=solana,p=YOUR_INFLUXDB_PW"
         command: ["/bin/sh", "-c"]
         args: ["/root/startup.sh"]
         volumeMounts:
