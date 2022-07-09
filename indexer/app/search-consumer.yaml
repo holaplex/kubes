@@ -54,6 +54,13 @@ spec:
               optional: false
         command: ["/bin/bash","-c"]
         args: ["./bin/holaplex-indexer-search --sender mainnet"]
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 250m
+          limits:
+            memory: 2Gi
+            cpu: 2000m
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
