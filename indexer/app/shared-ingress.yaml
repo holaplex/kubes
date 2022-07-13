@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/limit-connections: "1"
+    nginx.ingress.kubernetes.io/limit-rps: "3"
+    nginx.ingress.kubernetes.io/limit-burst-multiplier: "1"
+  name: shared-graphql
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: shared.holaplex.tools
+    http:
+      paths:
+      - backend:
+          service:
+            name: graphql
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - shared.holaplex.tools
