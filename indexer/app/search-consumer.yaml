@@ -22,7 +22,7 @@ spec:
         app: search-consumer
     spec:
       containers:
-        name: search-consumer
+      - name: search-consumer
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:search-consumer-master-bda9b1f
         envFrom:
         - configMapRef:
