@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  annotations:
+    reloader.stakater.com/auto: "true"
+  name: legacy-storefronts
+spec:
+  concurrencyPolicy: Allow
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: legacy-storefronts
+        spec:
+          containers:
+          - args:
+            - ./bin/holaplex-indexer-legacy-storefronts
+            command:
+            - /bin/bash
+            - -c
+            env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  key: DATABASE_WRITE_URL
+                  name: postgres-creds-url
+                  optional: false
+            envFrom:
+            - configMapRef:
+                name: indexer-config
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:legacy-storefronts-dev-d1ab86f
+            imagePullPolicy: IfNotPresent
+            name: legacy-storefronts
+            securityContext:
+              allowPrivilegeEscalation: false
+            terminationMessagePath: /dev/termination-log
+            terminationMessagePolicy: File
+          dnsConfig:
+            options:
+            - name: ndots
+              value: "3"
+          dnsPolicy: ClusterFirst
+          restartPolicy: OnFailure
+          schedulerName: default-scheduler
+          terminationGracePeriodSeconds: 30
+  schedule: 0 * * * *
+  successfulJobsHistoryLimit: 3
+  suspend: false

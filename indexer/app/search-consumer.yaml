@@ -6,6 +6,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
+  revisionHistoryLimit: 3
   replicas: 1
   strategy:
     type: RollingUpdate
@@ -21,30 +22,16 @@ spec:
         app: search-consumer
     spec:
       containers:
-      - envFrom:
-        - configMapRef:
-            name: indexer-config
         name: search-consumer
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:search-consumer-master-bda9b1f
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: amqp-creds
         env:
-        - name: AMQP_URL
-          valueFrom:
-            secretKeyRef:
-              name: amqp-creds
-              key: AMQP_URL
-              optional: false
-        - name: MEILI_KEY
-          valueFrom:
-            secretKeyRef:
-              name: meili-creds
-              key: MEILI_KEY
-              optional: false
-        - name: MEILI_URL
-          valueFrom:
-            secretKeyRef:
-              name: meili-creds
-              key: MEILI_URL
-              optional: false
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
