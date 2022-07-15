@@ -61,7 +61,7 @@ spec:
       protocol: amqp
       queueName: mainnet.metadata-json.http.indexer
       mode: QueueLength
-      value: "3000"
+      value: "5000"
       metricName: http-consumer-scaling
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
