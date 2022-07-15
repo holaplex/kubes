@@ -24,6 +24,13 @@ spec:
       containers:
       - name: graphql
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-dev-c8e3da4
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: twitter-creds
         env:
         - name: DATABASE_READ_URL
           valueFrom:
@@ -31,28 +38,7 @@ spec:
               name: postgres-creds-url
               key: DATABASE_READ_URL
               optional: false
-        - name: TWITTER_BEARER_TOKEN
-          valueFrom:
-            secretKeyRef:
-              name: twitter-creds
-              key: TWITTER_BEARER_TOKEN
-              optional: false
-        - name: MEILI_KEY
-          valueFrom:
-            secretKeyRef:
-              name: meili-creds
-              key: MEILI_KEY
-              optional: false
-        - name: MEILI_URL
-          valueFrom:
-            secretKeyRef:
-              name: meili-creds
-              key: MEILI_URL
-              optional: false
         command: ["./bin/holaplex-indexer-graphql"]
-        volumeMounts:
-        - name: indexer-config
-          mountPath: .env.local
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
@@ -62,10 +48,6 @@ spec:
         runAsUser: 1000
         runAsGroup: 3000
         fsGroup: 2000
-      volumes:
-        - name: indexer-config
-          configMap:
-            name: indexer-config
 ---
 apiVersion: v1
 kind: Service

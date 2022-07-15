@@ -22,37 +22,16 @@ spec:
       containers:
       - name: geyser-consumer
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-c8e3da4
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: amqp-creds
+        - secretRef:
+            name: dialect-creds
         env:
-        - name: MEILI_KEY
-          valueFrom:
-            secretKeyRef:
-              name: meili-creds
-              key: MEILI_KEY
-              optional: false
-        - name: MEILI_URL
-          valueFrom:
-            secretKeyRef:
-              name: meili-creds
-              key: MEILI_URL
-              optional: false
-        - name: AMQP_URL
-          valueFrom:
-            secretKeyRef:
-              name: amqp-creds
-              key: AMQP_URL
-              optional: false
-        - name: DIALECT_API_KEY
-          valueFrom:
-            secretKeyRef:
-              name: dialect-creds
-              key: DIALECT_API_KEY
-              optional: false
-        - name: DIALECT_API_ENDPOINT
-          valueFrom:
-            secretKeyRef:
-              name: dialect-creds
-              key: DIALECT_API_ENDPOINT
-              optional: false
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
@@ -61,9 +40,6 @@ spec:
               optional: false
         command: ["/bin/bash","-c"]
         args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal --meili-url $MEILI_URL --meili-key $MEILI_KEY --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT & ./bin/holaplex-indexer-geyser --network=mainnet --startup=all --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT --meili-url $MEILI_URL --meili-key $MEILI_KEY"]
-        volumeMounts:
-        - name: indexer-config
-          mountPath: .env.local
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
@@ -75,7 +51,3 @@ spec:
         runAsUser: 1000
         runAsGroup: 3000
         fsGroup: 2000
-      volumes:
-        - name: indexer-config
-          configMap:
-            name: indexer-config

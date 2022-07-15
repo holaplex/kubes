@@ -26,6 +26,8 @@ spec:
                   name: postgres-creds-url
                   key: DATABASE_WRITE_URL
                   optional: false
+            - name: RUST_LOG
+              value: debug
             command: ["/bin/bash","-c"]
             args: ["./bin/holaplex-indexer-legacy-storefronts"]
             securityContext:
