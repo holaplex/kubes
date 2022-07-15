@@ -19,6 +19,7 @@ spec:
       labels:
         app: http-consumer
     spec:
+      revisionHistoryLimit: 3
       containers:
       - name: store-config-consumer
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-c8e3da4
