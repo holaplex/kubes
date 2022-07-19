@@ -2,9 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
+    reloader.stakater.com/auto: "true"
   name: hola-signer
 spec:
-  replicas: 1
+  revisionHistoryLimit: 3
+  replicas: 2
   strategy:
     type: RollingUpdate
     rollingUpdate:
