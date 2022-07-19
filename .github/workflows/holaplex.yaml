@@ -21,11 +21,12 @@ jobs:
             git_branch=${GITHUB_REF##*/}
             if [ $git_branch == 'canary' ];then
               git_branch=dev
+            else
+              git_branch=${GITHUB_REF##*/}
             fi
             repo=holaplex
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
-            git_branch=${GITHUB_REF##*/}
             #Frontend
             app=frontend
             deployment_file="./$repo/app/$app.yaml"
