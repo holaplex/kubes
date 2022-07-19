@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-holaplex
+  namespace: argocd
+spec:
+  project: prod-holaplex
+  source:
+    repoURL: https://github.com/holaplex/kubes.git
+    targetRevision: main
+    path: holaplex/app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod-holaplex

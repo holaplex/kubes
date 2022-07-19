@@ -1,0 +1,37 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/affinity: "cookie"
+    nginx.ingress.kubernetes.io/session-cookie-name: "route"
+    nginx.ingress.kubernetes.io/session-cookie-expires: "172800"
+    nginx.ingress.kubernetes.io/session-cookie-max-age: "172800"
+  name: hola-frontend
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: www.holaplex.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hola-frontend
+              port:
+                number: 3000
+
+  - host: holaplex.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hola-frontend
+              port:
+                number: 3000
+  tls:
+  - hosts:
+    - holaplex.com
+    secretName: com-hola-frontend-tls
