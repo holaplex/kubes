@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: store-config-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-33ff4db
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-c492621
         envFrom:
         - configMapRef:
             name: indexer-config
@@ -43,7 +43,7 @@ spec:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
       - name: http-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-33ff4db
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-c492621
         envFrom:
         - configMapRef:
             name: indexer-config
