@@ -21,8 +21,8 @@ spec:
     #containerName: {container-name}  #Optional. Default: deployment.spec.template.spec.containers[0]
   pollingInterval: 60
   cooldownPeriod:  300
-  minReplicaCount: 1
-  maxReplicaCount: 6
+  minReplicaCount: 2
+  maxReplicaCount: 10
   triggers:
   - type: rabbitmq
     metadata:
@@ -54,7 +54,7 @@ spec:
   pollingInterval: 60
   cooldownPeriod:  300
   minReplicaCount: 2
-  maxReplicaCount: 4
+  maxReplicaCount: 5
   triggers:
   - type: rabbitmq
     metadata:
@@ -63,6 +63,29 @@ spec:
       mode: QueueLength
       value: "3000"
       metricName: http-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: store-config-consumer-scaling
+  namespace: stage-indexer
+spec:
+  scaleTargetRef:
+    name: store-config-consumer
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 1
+  maxReplicaCount: 2
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: mainnet.store-config.http.indexer
+      mode: QueueLength
+      value: "3000"
+      metricName: store-config-consumer-scaling
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
 ---

@@ -23,37 +23,14 @@ jobs:
             repo=indexer
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
-            #Geyser Consumer
-            app=geyser-consumer
-            deployment_file="./$repo/app/$app.yaml"
-            version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
-            echo "Updating ${app} deployment with new image tag"
-            sed -i "s/$version/$app-${GITHUB_REF##*/}-$git_hash/" $deployment_file
-            #HTTP Consumer
-            app=http-consumer
-            deployment_file="./$repo/app/$app.yaml"
-            version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | head -n1 | cut -d: -f2)
-            echo "Updating ${app} deployment with new image tag"
-            sed -i "s/$version/$app-${GITHUB_REF##*/}-$git_hash/g" $deployment_file
-            #GraphQL server
-            app=graphql
-            deployment_file="./$repo/app/$app.yaml"
-            version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
-            echo "Updating ${app} deployment with new image tag"
-            sed -i "s/$version/$app-${GITHUB_REF##*/}-$git_hash/" $deployment_file
-            #Search indexer
-            app=search-consumer
-            deployment_file="./$repo/app/$app.yaml"
-            version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
-            echo "Updating ${app} deployment with new image tag"
-            sed -i "s/$version/$app-${GITHUB_REF##*/}-$git_hash/" $deployment_file
-            #legacy storefronts indexer
-            app=legacy-storefronts
-            deployment_file="./$repo/app/$app.yaml"
-            version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
-            echo "Updating ${app} deployment with new image tag"
-            sed -i "s/$version/$app-${GITHUB_REF##*/}-$git_hash/" $deployment_file
-
+            declare -a apps=("graphql" "http-consumer" "search-consumer" "geyser-consumer" "store-config-consumer")
+            for app in "${apps[@]}"
+            do
+               echo "Updating ${app} deployment with new image tag"
+               deployment_file="./$repo/app/$app.yaml"
+               version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | head -n1 | cut -d: -f2)
+               sed -i "s/$version/$app-$git_branch-$git_hash/g" $deployment_file
+            done
 
       - name: Commit and push changes
         uses: devops-infra/action-commit-push@master
