@@ -22,7 +22,7 @@ spec:
   pollingInterval: 60
   cooldownPeriod:  300
   minReplicaCount: 1
-  maxReplicaCount: 10
+  maxReplicaCount: 6
   triggers:
   - type: rabbitmq
     metadata:
@@ -53,8 +53,8 @@ spec:
     name: http-consumer
   pollingInterval: 60
   cooldownPeriod:  300
-  minReplicaCount: 5
-  maxReplicaCount: 12
+  minReplicaCount: 2
+  maxReplicaCount: 4
   triggers:
   - type: rabbitmq
     metadata:
@@ -77,7 +77,7 @@ spec:
   pollingInterval: 60
   cooldownPeriod:  300
   minReplicaCount: 1
-  maxReplicaCount: 5
+  maxReplicaCount: 3
   triggers:
   - type: rabbitmq
     metadata:
