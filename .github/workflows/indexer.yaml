@@ -29,6 +29,9 @@ jobs:
                echo "Updating ${app} deployment with new image tag"
                deployment_file="./$repo/app/$app.yaml"
                version=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | head -n1 | cut -d: -f2)
+               if [ $app = 'store-config-consumer' ];then
+                  app=http-consumer
+               fi
                sed -i "s/$version/$app-$git_branch-$git_hash/g" $deployment_file
             done
 
