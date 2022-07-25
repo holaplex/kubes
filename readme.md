@@ -579,7 +579,9 @@ cat <<EOF>> ./$network/geyser-config.json
     ],
     "startup": false
   },
-  "instructionPrograms": []
+  "instructions": {
+    "programs": []
+  }
 }
 EOF
 ```
