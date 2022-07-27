@@ -23,7 +23,7 @@ spec:
         - configMapRef:
             name: hola-config
         name: frontend
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:frontend-main-0511ec5
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/holaplex:frontend-main-b8e0d8d
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
