@@ -6,7 +6,6 @@ metadata:
     reloader.stakater.com/auto: "true"
     argocd.argoproj.io/hook: PreSync
 spec:
-  backoffLimit: 20
   template:
     spec:
       restartPolicy: OnFailure
