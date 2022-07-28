@@ -8,8 +8,6 @@ metadata:
 spec:
   backoffLimit: 20
   template:
-    metadata:
-      name: migrator
     spec:
       restartPolicy: OnFailure
       containers:
