@@ -29,7 +29,7 @@ spec:
             envFrom:
             - configMapRef:
                 name: indexer-config
-            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:legacy-storefronts-dev-d1ab86f
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:legacy-storefronts-master-1c2198c
             imagePullPolicy: IfNotPresent
             name: legacy-storefronts
             securityContext:
