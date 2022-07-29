@@ -5,10 +5,10 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
     argocd.argoproj.io/hook: PreSync
+    argocd.argoproj.io/hook-delete-policy: HookSucceeded
 spec:
   template:
     spec:
-      restartPolicy: OnFailure
       containers:
       - name: migrator
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:migrator-dev-30cbce4
@@ -33,3 +33,4 @@ spec:
         options:
         - name: ndots
           value: "3"
+      restartPolicy: OnFailure
