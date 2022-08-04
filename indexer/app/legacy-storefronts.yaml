@@ -15,7 +15,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: legacy-storefronts
-            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:legacy-storefronts-dev-27bca7e
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:legacy-storefronts-dev-a1b874a
             envFrom:
               - configMapRef:
                   name: indexer-config
