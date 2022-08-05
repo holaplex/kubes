@@ -11,7 +11,7 @@ spec:
     spec:
       containers:
       - name: migrator
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:migrator-dev-a85345d
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:migrator-dev-dfc90ac
         envFrom:
           - configMapRef:
               name: indexer-config
