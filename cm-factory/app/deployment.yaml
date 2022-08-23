@@ -20,9 +20,9 @@ spec:
     spec:
       containers:
       - name: cm-factory
-        env:
-        - name: APP_ENV
-          value: development
+        envFrom:
+        - configMapRef:
+          name: factory-config
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/cm-factory:main-6ed30e2
         imagePullPolicy: Always
         ports:
