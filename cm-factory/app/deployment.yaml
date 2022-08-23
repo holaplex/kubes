@@ -23,7 +23,7 @@ spec:
         env:
         - name: APP_ENV
           value: development
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/cm-factory:main-4866816
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/cm-factory:main-6ed30e2
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
