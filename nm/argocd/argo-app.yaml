@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: prod-nightmarket
+  namespace: argocd
+spec:
+  project: prod-nightmarket
+  source:
+    repoURL: https://github.com/holaplex/kubes.git
+    targetRevision: main
+    path: nm/app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod-nightmarket
