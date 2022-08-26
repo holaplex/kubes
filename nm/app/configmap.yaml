@@ -5,7 +5,7 @@ metadata:
 data:
   NODE_ENV: production
   SOLANA_ENDPOINT: https://holaplex-main-9e4a.mainnet.rpcpool.com
-  INDEXER_GRAPHQL_URL:
+  INDEXER_GRAPHQL_URL: https://graph.holaplex.com/v1
   NEXT_PUBLIC_ENVIRONMENT: production
   NEXT_PUBLIC_SOLANA_RPC_URL: https://holaplex-main-9e4a.mainnet.rpcpool.com
   NEXT_PUBLIC_GRAPHQL_URL: https://graph.holaplex.com/v1
