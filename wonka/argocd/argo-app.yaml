@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: prod-cm-factory
+  name: prod-wonka
   namespace: argocd
 spec:
-  project: prod-cm-factory
+  project: prod-wonka
   source:
     repoURL: https://github.com/holaplex/kubes.git
     targetRevision: main
-    path: cm-factory/app
+    path: wonka/app
   destination:
     server: https://kubernetes.default.svc
-    namespace: prod-cm-factory
+    namespace: prod-wonka

@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-  name: cm-factory
+  name: wonka
 spec:
   replicas: 2
   strategy:
@@ -12,17 +12,17 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: cm-factory
+      app: wonka
   template:
     metadata:
       labels:
-        app: cm-factory
+        app: wonka
     spec:
       containers:
-      - name: cm-factory
+      - name: wonka
         envFrom:
         - configMapRef:
-            name: factory-config
+            name: config
         image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/cm-factory:main-c0e7e58
         imagePullPolicy: Always
         ports:
