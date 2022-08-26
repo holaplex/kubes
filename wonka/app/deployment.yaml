@@ -23,7 +23,7 @@ spec:
         envFrom:
         - configMapRef:
             name: config
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/cm-factory:main-3047d4a
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/wonka:main-3047d4a
         imagePullPolicy: Always
         ports:
         - containerPort: 3000
