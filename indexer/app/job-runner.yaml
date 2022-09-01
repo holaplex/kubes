@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: store-config-consumer
+  name: job-runner
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -13,31 +13,22 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: store-config-consumer
+      app: job-runner
   template:
     metadata:
       labels:
-        app: store-config-consumer
+        app: job-runner
     spec:
       containers:
-      - name: store-config-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-4f0f2ed
+      - name: job-runner
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:job-runner-dev-4f0f2ed
         envFrom:
         - configMapRef:
             name: indexer-config
         - secretRef:
-            name: meili-creds
-        - secretRef:
             name: amqp-creds
-        env:
-        - name: DATABASE_WRITE_URL
-          valueFrom:
-            secretKeyRef:
-              name: postgres-creds-url
-              key: DATABASE_WRITE_URL
-              optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-http --entity store-config --sender mainnet"]
+        args: ["./bin/holaplex-indexer-job-runner --network=mainnet"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent

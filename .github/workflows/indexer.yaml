@@ -23,7 +23,7 @@ jobs:
             repo=indexer
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
-            declare -a apps=("graphql" "http-consumer" "search-consumer" "geyser-consumer" "store-config-consumer" "migrator")
+            declare -a apps=("graphql" "http-consumer" "search-consumer" "geyser-consumer" "store-config-consumer" "migrator" "job-runner")
             for app in "${apps[@]}"
             do
                echo "Updating ${app} deployment with new image tag"
