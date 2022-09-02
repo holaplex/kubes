@@ -4,7 +4,7 @@ metadata:
   name: indexer-config
 data:
   IPFS_CDN: https://ipfs.cache.holaplex.com
-  PGSSLMODE: require
+  PGSSLMODE: disable
   RUST_LOG: info
   ARWEAVE_CDN: https://arweave.net
   ARWEAVE_URL: https://arweave.net
