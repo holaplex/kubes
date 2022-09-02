@@ -1,91 +1,12 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: node-ports
+  name: validator
 spec:
   ports:
-    - name: rpc-http
-      port: 8899
-      protocol: TCP
-      targetPort: 8899
-    - name: rpc-websocket
-      port: 8900
-      protocol: TCP
-      targetPort: 8900
-    - name: val0
-      port: 8000
-      protocol: TCP
-      targetPort: 8000
-    - name: val1
-      port: 8001
-      protocol: TCP
-      targetPort: 8001
-    - name: val2
-      port: 8002
-      protocol: TCP
-      targetPort: 8002
-    - name: val3
-      port: 8003
-      protocol: TCP
-      targetPort: 8003
-    - name: val4
-      port: 8004
-      protocol: TCP
-      targetPort: 8004
-    - name: val5
-      port: 8005
-      protocol: TCP
-      targetPort: 8005
-    - name: val6
-      port: 8006
-      protocol: TCP
-      targetPort: 8006
-    - name: val7
-      port: 8007
-      protocol: TCP
-      targetPort: 8007
-    - name: val8
-      port: 8008
-      protocol: TCP
-      targetPort: 8008
-    - name: val9
-      port: 8009
-      protocol: TCP
-      targetPort: 8009
-    - name: val10
-      port: 8010
-      protocol: TCP
-      targetPort: 8010
-    - name: val11
-      port: 8011
-      protocol: TCP
-      targetPort: 8011
-    - name: val12
-      port: 8012
-      protocol: TCP
-      targetPort: 8012
-    - name: val13
-      port: 8013
-      protocol: TCP
-      targetPort: 8013
-  selector:
-    app: validator
-  type: NodePort
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: rpc-ports
-spec:
-  ports:
-    - name: rpc-http
-      port: 8899
-      protocol: TCP
-      targetPort: 8899
-    - name: rpc-websocket
-      port: 8900
-      protocol: TCP
-      targetPort: 8900
+  - port: 10899
+    protocol: TCP
+    targetPort: 10899
   selector:
     app: validator
   type: ClusterIP

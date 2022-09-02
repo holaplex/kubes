@@ -25,7 +25,7 @@ spec:
         image: rust:1.58.1-slim-bullseye
         env:
         - name: SOLANA_ENDPOINT
-          value: https://holaplex-main-9e4a.mainnet.rpcpool.com
+          value: https://rpc.devnet.holaplex.tools
         - name: REPO_URL
           value: https://github.com/holaplex/indexer
         - name: RUST_LOG

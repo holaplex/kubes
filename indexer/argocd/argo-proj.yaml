@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: stage-indexer
+  name: devnet-indexer
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  description: Indexer
+  description: Devnet Indexer
   # Allow manifests to deploy from any Git repos
   sourceRepos:
   - '*'
   # Only permit applications to deploy to the marketplace namespace in the same cluster
   destinations:
-  - namespace: stage-indexer
+  - namespace: devnet-indexer
     server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
@@ -48,8 +48,8 @@ spec:
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
-    description: Read-only privileges to stage-indexer
+    description: Read-only privileges to devnet-indexer
     policies:
-    - p, proj:stage-indexer:read-only, applications, get, stage-indexer/*, allow
+    - p, proj:devnet-indexer:read-only, applications, get, devnet-indexer/*, allow
     groups:
     - my-oidc-group

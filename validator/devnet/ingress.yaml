@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "solana-client,DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin"
+  name: validator-rpc-http
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: rpc.devnet.holaplex.tools
+    http:
+      paths:
+      - backend:
+          service:
+            name: validator
+            port:
+              number: 10899
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - rpc.devnet.holaplex.tools
+    secretName: validator-tls

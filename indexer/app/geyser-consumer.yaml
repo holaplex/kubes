@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: geyser-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-4f0f2ed
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-c9b9c57
         envFrom:
         - configMapRef:
             name: indexer-config
@@ -39,7 +39,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal --meili-url $MEILI_URL --meili-key $MEILI_KEY --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT & ./bin/holaplex-indexer-geyser --network=mainnet --startup=all --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT --meili-url $MEILI_URL --meili-key $MEILI_KEY"]
+        args: ["./bin/holaplex-indexer-geyser --network=devnet --startup=normal --meili-url $MEILI_URL --meili-key $MEILI_KEY --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT & ./bin/holaplex-indexer-geyser --network=devnet --startup=all --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT --meili-url $MEILI_URL --meili-key $MEILI_KEY"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent

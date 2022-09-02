@@ -3,16 +3,16 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/hostname: search.YOUR_DOMAIN
+    external-dns.alpha.kubernetes.io/hostname: search.devnet.holaplex.tools
     nginx.ingress.kubernetes.io/proxy-body-size: "0"
     nginx.ingress.kubernetes.io/proxy-read-timeout: "600"
     nginx.ingress.kubernetes.io/proxy-send-timeout: "600"
   name: meilisearch
-  namespace: meilisearch
+  namespace: devnet-meilisearch
 spec:
   ingressClassName: nginx
   rules:
-  - host: search.YOUR_DOMAIN
+  - host: search.devnet.holaplex.tools
     http:
       paths:
       - backend:
@@ -24,5 +24,5 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - search.YOUR_DOMAIN
+    - search.devnet.holaplex.tools
     secretName: meilisearch-tls

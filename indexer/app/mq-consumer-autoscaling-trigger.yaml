@@ -3,7 +3,7 @@ apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
   name: keda-trigger-auth-rabbitmq-conn
-  namespace: stage-indexer
+  namespace: devnet-indexer
 spec:
   secretTargetRef:
     - parameter: host
@@ -14,7 +14,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: geyser-consumer-scaling
-  namespace: stage-indexer
+  namespace: devnet-indexer
 spec:
   scaleTargetRef:
     name: geyser-consumer
@@ -22,12 +22,12 @@ spec:
   pollingInterval: 60
   cooldownPeriod:  300
   minReplicaCount: 1
-  maxReplicaCount: 2
+  maxReplicaCount: 5
   triggers:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.startup-all.accounts.indexer
+      queueName: devnet.startup-all.accounts.indexer
       mode: QueueLength
       value: "20000"
       metricName: geyser-consumer-scaling
@@ -36,7 +36,7 @@ spec:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.accounts.indexer
+      queueName: devnet.accounts.indexer
       mode: QueueLength
       value: "20000"
       metricName: geyser-consumer-scaling
@@ -47,19 +47,19 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: http-consumer-scaling
-  namespace: stage-indexer
+  namespace: devnet-indexer
 spec:
   scaleTargetRef:
     name: http-consumer
   pollingInterval: 60
   cooldownPeriod:  300
   minReplicaCount: 1
-  maxReplicaCount: 2
+  maxReplicaCount: 5
   triggers:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.metadata-json.http.indexer
+      queueName: devnet.metadata-json.http.indexer
       mode: QueueLength
       value: "3000"
       metricName: http-consumer-scaling
@@ -70,7 +70,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: store-config-consumer-scaling
-  namespace: stage-indexer
+  namespace: devnet-indexer
 spec:
   scaleTargetRef:
     name: store-config-consumer
@@ -82,7 +82,7 @@ spec:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.store-config.http.indexer
+      queueName: devnet.store-config.http.indexer
       mode: QueueLength
       value: "3000"
       metricName: store-config-consumer-scaling
@@ -93,7 +93,7 @@ apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
   name: search-consumer-scaling
-  namespace: stage-indexer
+  namespace: devnet-indexer
 spec:
   scaleTargetRef:
     name: search-consumer
@@ -105,7 +105,7 @@ spec:
   - type: rabbitmq
     metadata:
       protocol: amqp
-      queueName: mainnet.search.indexer
+      queueName: devnet.search.indexer
       mode: QueueLength
       value: "25000"
       metricName: search-consumer-scaling

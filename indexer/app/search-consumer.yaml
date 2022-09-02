@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: search-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:search-consumer-dev-4f0f2ed
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:search-consumer-dev-c9b9c57
         envFrom:
         - configMapRef:
             name: indexer-config
@@ -39,7 +39,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-search --sender mainnet"]
+        args: ["./bin/holaplex-indexer-search --sender devnet"]
         resources:
           requests:
             memory: 128Mi
