@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: http-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-master-4f95256
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-master-b50e30d
         envFrom:
         - configMapRef:
             name: indexer-config
