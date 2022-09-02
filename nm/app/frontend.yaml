@@ -23,7 +23,7 @@ spec:
         - configMapRef:
             name: config
         name: frontend
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/dao-marketplace:main-9e7f179
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/dao-marketplace:main-9a8a9fd
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
