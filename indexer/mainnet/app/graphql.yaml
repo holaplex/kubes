@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: graphql
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 2
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: graphql
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: graphql
+    spec:
+      containers:
+      - name: graphql
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-dev-c8bc0fe
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: twitter-creds
+        env:
+        - name: DATABASE_READ_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds-url
+              key: DATABASE_READ_URL
+              optional: false
+        command: ["./bin/holaplex-indexer-graphql"]
+        securityContext:
+          allowPrivilegeEscalation: false
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: graphql
+  annotations:
+spec:
+  selector:
+    app: graphql
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3000
+  - name: https
+    port: 443
+    targetPort: 3000

@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: burn-fix
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: burn-fix
+  template:
+    metadata:
+      labels:
+        app: burn-fix
+    spec:
+      containers:
+      - name: burn-fix
+        image: rust:1.58.1-slim-bullseye
+        env:
+        - name: SOLANA_ENDPOINT
+          value: https://rpc.devnet.holaplex.tools
+        - name: REPO_URL
+          value: https://github.com/holaplex/indexer
+        - name: RUST_LOG
+          value: info
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds-url
+              key: DATABASE_WRITE_URL
+              optional: false
+        command: ["/bin/bash", "-c"]
+        args: ["/script/burn-fix.sh"]
+        volumeMounts:
+        - name: script
+          mountPath: /script/burn-fix.sh
+          subPath: run.sh
+      volumes:
+      - name: script
+        configMap:
+          name: burn-fix-sh
+          defaultMode: 0777
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: burn-fix-sh
+data:
+  run.sh: |
+   #!/bin/bash
+   cd /tmp && \
+   apt update -y \
+   && apt install libssl-dev libudev-dev libpq-dev pkg-config git -y \
+   && git clone $REPO_URL \
+   && cd indexer \
+   && cargo run --profile docker --bin burn-fix

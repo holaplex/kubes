@@ -4,7 +4,7 @@ metadata:
   name: indexer-config
 data:
   IPFS_CDN: https://ipfs.cache.holaplex.com
-  PGSSLMODE: disable
+  PGSSLMODE: require
   RUST_LOG: info
   ARWEAVE_CDN: https://arweave.net
   ARWEAVE_URL: https://arweave.net
@@ -13,4 +13,4 @@ data:
   UPSERT_BATCH: "100000"
   UPSERT_INTERVAL: "3600"
   METADATA_JSON: "true"
-  SOLANA_ENDPOINT: https://holaplex.rpcpool.com/
+  SOLANA_ENDPOINT: https://rpc.devnet.holaplex.tools/

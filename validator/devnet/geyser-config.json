@@ -1,14 +1,14 @@
 {
   "amqp": {
     "network": "devnet",
-    "address": "amqp://changeme:please-changeme@rabbitmq-headless.rabbitmq-system:5672/solana"
+    "address": "amqp://your-amqp-endpoint/vhost"
   },
   "libpath": "/geyser/libholaplex_indexer_rabbitmq_geyser.so",
   "jobs": {
     "limit": 16
   },
   "metrics": {
-   "config": "host="
+   "config": "host=http://influxdb-influxdb2.monitoring:80,db=devnet,u=solana,p=your-custom-pw"
   },
   "accounts": {
     "owners": [
@@ -27,9 +27,21 @@
       "useZ65tbyvWpdYCLDJaegGK34Lnsi8S3jZdwx8122qp",
       "LocktDzaV1W2Bm9DeZeiyz4J9zs4fRqNiYqQyracRXw",
       "Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw",
-      "GokivDYuQXPZCWRkwMhdH2h91KpDQXBEmpgBgs55bnpH"
+      "GokivDYuQXPZCWRkwMhdH2h91KpDQXBEmpgBgs55bnpH",
+      "TBondmkCYxaPCKG4CHYfVTcwQ8on31xnJrPzk8F8WsS",
+      "nameXpT2PwZ2iA6DTNYTotTmiMYusBCYqwBLN2QgF4w",
+      "HAbiTatJVqoCJd9asyr6RxMEdwtfrQugwp7VAFyKWb1g",
+      "GovER5Lthms3bLBqWub97yVrMmEogzX7xNjdXpPPCVZw"
     ],
+    "pubkeys": [],
     "startup": null
   },
-  "instructionPrograms": []
+  "instructions": {
+    "programs": [
+      "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+      "MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8",
+      "hausS13jsjafwWwGqZTUQRmWyvyxn9EQpqMwV1PBBmk",
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ]
+  }
 }
