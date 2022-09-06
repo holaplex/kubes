@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: geyser-consumer
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: geyser-consumer
+  template:
+    metadata:
+      labels:
+        app: geyser-consumer
+    spec:
+      containers:
+      - name: geyser-consumer
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-c9b9c57
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: amqp-creds
+        - secretRef:
+            name: dialect-creds
+        env:
+        - name: DATABASE_WRITE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds-url
+              key: DATABASE_WRITE_URL
+              optional: false
+        command: ["/bin/bash","-c"]
+        args: ["./bin/holaplex-indexer-geyser --network=devnet --startup=normal --meili-url $MEILI_URL --meili-key $MEILI_KEY --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT & ./bin/holaplex-indexer-geyser --network=devnet --startup=all --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT --meili-url $MEILI_URL --meili-key $MEILI_KEY"]
+        securityContext:
+          allowPrivilegeEscalation: false
+        imagePullPolicy: IfNotPresent
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "3"
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000

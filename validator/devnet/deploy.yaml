@@ -7,10 +7,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+    type: Recreate
   selector:
     matchLabels:
       app: validator
@@ -28,48 +25,43 @@ spec:
         - name: geyser-plugin-loader
           image: busybox
           command: ["/bin/sh", "-c"]
-          args: ["while [[ ! -f /geyser/libholaplex_indexer_rabbitmq_geyser.so ]];do echo -e 'waiting for geyser plugin\nCopy from local using:\n kubectl cp -c geyser-plugin-loader libholaplex_indexer_rabbitmq_geyser.so dev-solana/$validator_pod:/geyser';sleep 10;done"]
+          args: ["while [[ ! -f /geyser/libholaplex_indexer_rabbitmq_geyser.so ]];do echo -e 'waiting for geyser plugin\nCopy from local using:\n kubectl cp -c geyser-plugin-loader libholaplex_indexer_rabbitmq_geyser.so devnet-solana/validator_pod_name:/geyser';sleep 10;done;rm -f /ledger/ledger.lock"]
           volumeMounts:
           - name: geyser-plugin
             mountPath: /geyser
       containers:
-      - image: solanalabs/solana:v1.10.26
+      - image: solanalabs/solana:v1.10.38
         name: watchtower
         command: ["solana-watchtower"]
-        env:
-        - name: SSL_CERT_FILE
-          value: /etc/ssl/certs/ca-certificates.crt
-        - name: SSL_CERT_DIR
-          value: /etc/ssl/certs
-        - name: SOLANA_METRICS_CONFIG
-          value: "host=http://influxdb-influxdb2.monitoring,db=devnet,u=solana,p=your-custom-pw"
-        - name: SOLANA_NETWORK
-          value: devnet
+        envFrom:
+        - configMapRef:
+            name: validator-config
         volumeMounts:
         - name: ca-certificates
           mountPath: /etc/ssl/certs/ca-certificates.crt
           subPath: ca-certificates.crt
-      - image: solanalabs/solana:v1.10.26
+      - image: solanalabs/solana:v1.10.38
         resources:
           limits:
-            memory: "126Gi"
+            memory: "240Gi"
+            cpu: "30000m"
           requests:
-            memory: "16Gi"
+            memory: "186Gi"
+            cpu: "8000m"
         imagePullPolicy: IfNotPresent
         name: validator
-        env:
-        - name: SSL_CERT_FILE
-          value: /etc/ssl/certs/ca-certificates.crt
-        - name: SSL_CERT_DIR
-          value: /etc/ssl/certs
-        - name: SOLANA_NETWORK
-          value: devnet
-        - name: SOLANA_SNAPSHOT_COMPRESSION
-          value: none
-        - name: SOLANA_METRICS_CONFIG
-          value: "host=http://influxdb-influxdb2.monitoring,db=devnet,u=solana,p=your-custom-pw"
+        envFrom:
+        - configMapRef:
+            name: validator-config
         command: ["/bin/sh", "-c"]
         args: ["/root/startup.sh"]
+        ports:
+        - containerPort: 10899
+          name: rpc
+          protocol: TCP
+        - containerPort: 10900
+          name: rpc-ws
+          protocol: TCP
         volumeMounts:
         - name: ca-certificates
           mountPath: /etc/ssl/certs/ca-certificates.crt

@@ -1,0 +1,113 @@
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: keda-trigger-auth-rabbitmq-conn
+  namespace: devnet-indexer
+spec:
+  secretTargetRef:
+    - parameter: host
+      name: amqp-creds
+      key: AMQP_URL
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: geyser-consumer-scaling
+  namespace: devnet-indexer
+spec:
+  scaleTargetRef:
+    name: geyser-consumer
+    #containerName: {container-name}  #Optional. Default: deployment.spec.template.spec.containers[0]
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: devnet.startup-all.accounts.indexer
+      mode: QueueLength
+      value: "20000"
+      metricName: geyser-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: devnet.accounts.indexer
+      mode: QueueLength
+      value: "20000"
+      metricName: geyser-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: http-consumer-scaling
+  namespace: devnet-indexer
+spec:
+  scaleTargetRef:
+    name: http-consumer
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 1
+  maxReplicaCount: 5
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: devnet.metadata-json.http.indexer
+      mode: QueueLength
+      value: "3000"
+      metricName: http-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: store-config-consumer-scaling
+  namespace: devnet-indexer
+spec:
+  scaleTargetRef:
+    name: store-config-consumer
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 1
+  maxReplicaCount: 2
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: devnet.store-config.http.indexer
+      mode: QueueLength
+      value: "3000"
+      metricName: store-config-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+  name: search-consumer-scaling
+  namespace: devnet-indexer
+spec:
+  scaleTargetRef:
+    name: search-consumer
+  pollingInterval: 60
+  cooldownPeriod:  300
+  minReplicaCount: 1
+  maxReplicaCount: 2
+  triggers:
+  - type: rabbitmq
+    metadata:
+      protocol: amqp
+      queueName: devnet.search.indexer
+      mode: QueueLength
+      value: "25000"
+      metricName: search-consumer-scaling
+    authenticationRef:
+      name: keda-trigger-auth-rabbitmq-conn

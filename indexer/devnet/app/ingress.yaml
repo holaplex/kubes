@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+  name: graphql
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: graph.devnet.holaplex.tools
+    http:
+      paths:
+      - backend:
+          service:
+            name: graphql
+            port:
+              number: 80
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - graph.devnet.holaplex.tools
