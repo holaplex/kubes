@@ -24,7 +24,7 @@ Some instructions here will only work on Ubuntu `20.04` | `22.04` machines, but 
 |   |Without Solana Node |With Solana Node   |
 |---|---|---|
 | vCPU  | 8   | 16  |
-| RAM  | 32 GB  | 128 GB  |
+| RAM  | 32 GB  | 256 GB  |
 | Disk (SSD)| 500 GB  | 2x 500GB  |
 
 Keep in mind that whis Solana Node will not be staking, it will be used only as an RPC endpoint and to communicate with the other nodes to retrieve real-time updates that will be fed to the [Indexer Stack](https://github.com/holaplex/indexer).
@@ -120,26 +120,26 @@ Create MetalLB Namespace
 kubectl apply -f ./metallb/namespace.yaml
 ```
 
-Retrieve your IP address and apply the below MetalLB `configMap`
+Retrieve your IP address and apply the IpPoolAddress manifest
 
 ```bash
-nic=eth1
+nic=eth0
 addresses=$(ip -4 addr show $nic | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-sed "s#LB_ADDRESSES#${addresses}#g" ./metallb/configMap.yaml | kubectl apply -f -
+lb_range=$(echo $addresses | awk {'print $1 "-" $1'})
+sed "s#LB_ADDRESSES#${lb_range}#g" ./metallb/ip-pool.yaml | kubectl apply -f -
 ```
 
 Deploy metallb
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
 #Wait until Metallb is ready
 kubectl wait --for=condition=Ready pod --timeout 60s -n metallb-system -l app=metallb -l component=speaker
 ```
 
 # NGINX Ingress
 ```bash
-kube_version=$(kubectl version -o json | jq -jr '. .serverVersion | .major, ".", .minor' | tr -d '+')
 #Deploy nginx ingress using type LoadBalancer
-curl -sfL https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/${kube_version}/deploy.yaml | sed 's#type: NodePort#type: LoadBalancer#g' | kubectl apply -f -
+curl -sfL https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml | sed 's#type: NodePort#type: LoadBalancer#g' | kubectl apply -f -
 #Wait for deployment to complete
 kubectl wait pod --for=condition=Ready --timeout 60s -n ingress-nginx -l app.kubernetes.io/component=controller
 ```
@@ -147,7 +147,6 @@ kubectl wait pod --for=condition=Ready --timeout 60s -n ingress-nginx -l app.kub
 # Cert Manager
 
 Get the latest version from the releases page and install with `helm`.
-
 ```bash
 latest=$(curl -s https://api.github.com/repos/cert-manager/cert-manager/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
 helm repo add jetstack https://charts.jetstack.io
@@ -374,7 +373,7 @@ export PGPASSWORD=$(kubectl get secret $db_user.$team-$db_cluster_name.credentia
 #Retrieve Database_url
 export DATABASE_URL="postgres://$db_user:$PGPASSWORD@$team-$db_cluster_name.$namespace.svc:5432/$db_name"
 #Create the Database
-kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace --restart='Never' --env PGPASSWORD=$PGPASSWORD --image docker.io/bitnami/postgresql:14-debian-10 -- psql $(echo $DATABASE_URL | sed 's/\/indexer//g') -c "create database $db_name"
+kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace --restart='Never' --image docker.io/bitnami/postgresql:14-debian-10 -- psql $(echo $DATABASE_URL | sed 's/\/indexer//g') -c "create database $db_name"
 ```
 
 # Indexer
