@@ -9,13 +9,13 @@ solana-validator  \
 --known-validator=DE1bawNcRJB9rVm3buyMVfr8mBEoyyu73NBovf2oXJsJ \
 --known-validator=CakcnaRDHka2gXyfbEd2d3xsvkJkqsLw2akB3zsN1D2S \
 --ledger=ledger \
---rpc-port=8899 \
+--rpc-port=10899 \
+--full-rpc-api \
 --entrypoint=entrypoint.mainnet-beta.solana.com:8001 \
 --entrypoint=entrypoint2.mainnet-beta.solana.com:8001 \
 --entrypoint=entrypoint3.mainnet-beta.solana.com:8001 \
 --entrypoint=entrypoint4.mainnet-beta.solana.com:8001 \
 --entrypoint=entrypoint5.mainnet-beta.solana.com:8001 \
---private-rpc \
 --no-untrusted-rpc \
 --no-voting \
 --dynamic-port-range=8000-8013 \

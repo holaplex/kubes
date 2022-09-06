@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: stage-indexer
+  name: devnet-indexer
   namespace: argocd
   annotations:
     notifications.argoproj.io/subscribe.on-deployed.slack: cicd-monitoring
@@ -10,11 +10,11 @@ metadata:
     notifications.argoproj.io/subscribe.on-sync-status-unknown.slack: cicd-monitoring
     notifications.argoproj.io/subscribe.on-sync-succeeded.slack: cicd-monitoring
 spec:
-  project: stage-indexer
+  project: devnet-indexer
   source:
     repoURL: https://github.com/holaplex/kubes.git
     targetRevision: dev
-    path: indexer/app
+    path: indexer/devnet/app
   destination:
     server: https://kubernetes.default.svc
-    namespace: stage-indexer
+    namespace: devnet-indexer

@@ -1,6 +1,6 @@
 {
   "amqp": {
-    "network": "devnet",
+    "network": "mainnet",
     "address": "amqp://your-amqp-endpoint/vhost"
   },
   "libpath": "/geyser/libholaplex_indexer_rabbitmq_geyser.so",
@@ -8,7 +8,7 @@
     "limit": 16
   },
   "metrics": {
-   "config": "host=http://influxdb-influxdb2.monitoring:80,db=devnet,u=solana,p=your-custom-pw"
+   "config": "host=http://influxdb-influxdb2.monitoring:80,db=mainnet,u=solana,p=your-custom-pw"
   },
   "accounts": {
     "owners": [

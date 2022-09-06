@@ -1,0 +1,58 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: devnet-indexer
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  description: Devnet Indexer
+  # Allow manifests to deploy from any Git repos
+  sourceRepos:
+  - '*'
+  # Only permit applications to deploy to the marketplace namespace in the same cluster
+  destinations:
+  - namespace: devnet-indexer
+    server: https://kubernetes.default.svc
+  # Deny all cluster-scoped resources from being created, except for Namespace
+  clusterResourceWhitelist:
+  - group: ''
+    kind: Namespace
+  # Allow all namespaced-scoped resources to be created, except for ResourceQuota, LimitRange, NetworkPolicy
+  namespaceResourceBlacklist:
+  - group: ''
+    kind: ResourceQuota
+  - group: ''
+    kind: LimitRange
+  - group: ''
+    kind: NetworkPolicy
+  namespaceResourceWhitelist:
+  - group: ''
+    kind: ConfigMap
+  - group: ''
+    kind: Service
+  - group: apps
+    kind: Deployment
+  - group: apps
+    kind: StatefulSet
+  - group: keda.sh
+    kind: TriggerAuthentication
+  - group: keda.sh
+    kind: ScaledObject
+  - group: networking.k8s.io
+    kind: Ingress
+  - group: batch
+    kind: CronJob
+  - group: batch
+    kind: Job
+  - group: ''
+    kind: '*'
+
+  roles:
+  # A role which provides read-only access to all applications in the project
+  - name: read-only
+    description: Read-only privileges to devnet-indexer
+    policies:
+    - p, proj:devnet-indexer:read-only, applications, get, devnet-indexer/*, allow
+    groups:
+    - my-oidc-group

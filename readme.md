@@ -1,4 +1,4 @@
-# Description
+## Description
 This repository contains the required Kubernetes manifests to deploy the infrastructure you need to start developing in Solana right away, using the [Indexer Stack](https://github.com/holaplex/indexer) that powers [Holaplex](https://holaplex.com) and many other projects in the ecosystem.
 The steps below will describe how to deploy a *single node* Kubernetes cluster using `k3s` and all the components required to get up and running. Same steps apply if you are doing it locally or in any cloud provider. You should get a *Web2 like* development environment after completing all steps.
 
@@ -24,7 +24,7 @@ Some instructions here will only work on Ubuntu `20.04` | `22.04` machines, but 
 |   |Without Solana Node |With Solana Node   |
 |---|---|---|
 | vCPU  | 8   | 16  |
-| RAM  | 32 GB  | 128 GB  |
+| RAM  | 32 GB  | 256 GB  |
 | Disk (SSD)| 500 GB  | 2x 500GB  |
 
 Keep in mind that whis Solana Node will not be staking, it will be used only as an RPC endpoint and to communicate with the other nodes to retrieve real-time updates that will be fed to the [Indexer Stack](https://github.com/holaplex/indexer).
@@ -40,7 +40,7 @@ You can also host the Solana node in a different VM and join that machine to the
 
 Steps to install all dependencies is described in the following steps.
 
-# Getting started
+## Getting started
 
 ### Preparing your VM
 Create a Ubuntu 20.04 VM or spin up a cloud instance in your favourite provider and login as root trough SSH.
@@ -73,7 +73,7 @@ With everything installed, clone the `kubes` repository and `cd` into the folder
 git clone https://github.com/holaplex/kubes && cd kubes
 ```
 
-# Creating a single-node Kubernetes cluster with k3s
+## Creating a single-node Kubernetes cluster with k3s
 
 Change minimum resources reserved by k3s and node hard evictions.
 
@@ -114,40 +114,39 @@ Check that your cluster is running
 kubectl get pods -n kube-system
 ```
 
-# MetalLB
+## MetalLB
 Create MetalLB Namespace
 ```bash
 kubectl apply -f ./metallb/namespace.yaml
 ```
 
-Retrieve your IP address and apply the below MetalLB `configMap`
+Retrieve your IP address and apply the IpPoolAddress manifest
 
 ```bash
-nic=eth1
+nic=eth0
 addresses=$(ip -4 addr show $nic | grep -oP '(?<=inet\s)\d+(\.\d+){3}')
-sed "s#LB_ADDRESSES#${addresses}#g" ./metallb/configMap.yaml | kubectl apply -f -
+lb_range=$(echo $addresses | awk {'print $1 "-" $1'})
+sed "s#LB_ADDRESSES#${lb_range}#g" ./metallb/ip-pool.yaml | kubectl apply -f -
 ```
 
 Deploy metallb
 ```bash
-kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.12.1/manifests/metallb.yaml
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
 #Wait until Metallb is ready
 kubectl wait --for=condition=Ready pod --timeout 60s -n metallb-system -l app=metallb -l component=speaker
 ```
 
-# NGINX Ingress
+## NGINX Ingress
 ```bash
-kube_version=$(kubectl version -o json | jq -jr '. .serverVersion | .major, ".", .minor' | tr -d '+')
 #Deploy nginx ingress using type LoadBalancer
-curl -sfL https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/${kube_version}/deploy.yaml | sed 's#type: NodePort#type: LoadBalancer#g' | kubectl apply -f -
+curl -sfL https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml | sed 's#type: NodePort#type: LoadBalancer#g' | kubectl apply -f -
 #Wait for deployment to complete
 kubectl wait pod --for=condition=Ready --timeout 60s -n ingress-nginx -l app.kubernetes.io/component=controller
 ```
 
-# Cert Manager
+## Cert Manager
 
 Get the latest version from the releases page and install with `helm`.
-
 ```bash
 latest=$(curl -s https://api.github.com/repos/cert-manager/cert-manager/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
 helm repo add jetstack https://charts.jetstack.io
@@ -160,7 +159,7 @@ helm upgrade --install \
   --version $latest
 ```
 
-# LetsEncrypt Certificate Issuers
+## LetsEncrypt Certificate Issuers
 This step is required *only if you need SSL Certs for your ingresses*.
 ```bash
 #Email address to use for cert renewal notifications
@@ -168,13 +167,13 @@ email="mariano@holaplex.com"
 sed "s#YOUR_EMAIL#${email}#g" ./cert-manager/certissuers/letsencrypt.yaml | kubectl apply -f -
 ```
 
-# External DNS
+## External DNS
 ```bash
 latest=$(curl -s https://api.github.com/repos/kubernetes-sigs/external-dns/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
 sed "s#YOUR_ZONE_ID#${cloudflare_zone_id}#g;s#YOUR_API_TOKEN#${cloudflare_api_token}#g" ./external-dns/deploy.yaml | kubectl apply -f  -
 ```
 
-# Docker registry
+## Docker registry
 This step can be skipped if you are using any other public registry for your indexer images.
 
 ### Deploying
@@ -205,7 +204,7 @@ EOF"
 sudo systemctl restart k3s
 ```
 
-# RabbitMQ
+## RabbitMQ
 RabbitMQ Will be installed using Helm.
 
 ```bash
@@ -239,7 +238,7 @@ Create an ingress for RabbitMQ console. Will be available at `rabbit.$domain`.
 sed "s#YOUR_DOMAIN#${domain}#g" ./rabbitmq/ingress.yaml | kubectl apply -f -
 ```
 
-# KEDA
+## KEDA
 Pod autoscaling for Rabbit Message queues.
 ```bash
 helm repo add kedacore https://kedacore.github.io/charts
@@ -248,7 +247,7 @@ helm install keda kedacore/keda --namespace keda --create-namespace
 #Auto-scaling policies will be deployed later.
 ```
 
-# Meilisearch
+## Meilisearch
 Search backend for the indexer.
 Add the Meilisearch Helm repo.
 
@@ -285,7 +284,7 @@ sed "s#YOUR_DOMAIN#${domain}#g" ./meilisearch/ingress.yaml | kubectl apply -f -
 ```
 Endpoint will be `search.$domain`
 
-# Postgres
+## Postgres
 
 Clone Zalando's Postgres operator repo
 ```bash
@@ -374,10 +373,10 @@ export PGPASSWORD=$(kubectl get secret $db_user.$team-$db_cluster_name.credentia
 #Retrieve Database_url
 export DATABASE_URL="postgres://$db_user:$PGPASSWORD@$team-$db_cluster_name.$namespace.svc:5432/$db_name"
 #Create the Database
-kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace --restart='Never' --env PGPASSWORD=$PGPASSWORD --image docker.io/bitnami/postgresql:14-debian-10 -- psql $(echo $DATABASE_URL | sed 's/\/indexer//g') -c "create database $db_name"
+kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace --restart='Never' --image docker.io/bitnami/postgresql:14-debian-10 -- psql $(echo $DATABASE_URL | sed 's/\/indexer//g') -c "create database $db_name"
 ```
 
-# Indexer
+## Indexer Stack
 
 ### Building the docker images and pushing to local registry
 Run the `build_images.sh` script to clone the indexer stack repository and build the docker images.
@@ -458,7 +457,7 @@ spec:
 EOF
 ```
 
-# Solana Node deployment
+## Solana Node deployment
 
 More info on how to deploy a validator (To use as reference is something is not working or want to learn more):
 - [How to run a Solana node](https://chainstack.com/how-to-run-a-solana-node/) By Chainstack
@@ -577,10 +576,15 @@ cat <<EOF>> ./$network/geyser-config.json
       "Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw",
       "GokivDYuQXPZCWRkwMhdH2h91KpDQXBEmpgBgs55bnpH"
     ],
-    "startup": false
+    "startup": null
   },
   "instructions": {
-    "programs": []
+    "programs": [
+      "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+      "MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8",
+      "hausS13jsjafwWwGqZTUQRmWyvyxn9EQpqMwV1PBBmk",
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ]
   }
 }
 EOF
@@ -595,7 +599,7 @@ kubectl create cm geyser-plugin-config --from-file=./$network/geyser-config.json
 Create a mount folder for the validator data and set the variable `validator_data_path` accordingly.
 Ideally, you'll use a separate SSD for the ledger.
 ```bash
-validator_data_path="/mnt/p3600/validator/$network"
+validator_data_path="/mnt/<your-drive-name>/validator/$network"
 sudo mkdir -p $validator_data_path && sudo chown $USER:$USER $validator_data_path
 ```
 
@@ -605,7 +609,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: $network-validator-data-pv
+  name: validator-data-pv
 spec:
   capacity:
     storage: 500Gi
@@ -613,9 +617,8 @@ spec:
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: ""
   claimRef:
-    namespace: $namespace
+    namespace: $network-solana
     name: validator-data-pvc
   local:
     path: $validator_data_path
@@ -635,7 +638,6 @@ metadata:
   labels:
     app: validator
 spec:
- storageClassName: ""
  accessModes:
    - ReadWriteOnce
  resources:
@@ -669,7 +671,7 @@ kubectl apply -f ./$network/deploy.yaml -n $namespace
 
 Expose the RPC endpoint (optional)
 ```bash
-kubectl apply -f ./service.yaml -n $namespace
+kubectl apply -f ./$network/service.yaml -n $namespace
 ```
 
 Create an ingress for the RPC Http endpoint
@@ -680,58 +682,33 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/hostname: validator.$domain
-    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    external-dns.alpha.kubernetes.io/hostname: rpc.$domain
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "solana-client,DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin"
   name: validator-rpc-http
 spec:
   ingressClassName: nginx
   rules:
-  - host: validator.$domain
+  - host: rpc.$domain
     http:
       paths:
       - backend:
           service:
-            name: rpc-ports
+            name: validator
             port:
-              name: rpc-http
+              number: 10899
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - validator.$domain
+    - rpc.$domain
     secretName: validator-tls
 EOF
 ```
 
-Create an ingress for the RPC Websocket endpoint
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/hostname: validator.$domain
-  name: validator-rpc-ws
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: validator.$domain
-    http:
-      paths:
-      - backend:
-          service:
-            name: rpc-ports
-            port:
-              name: rpc-http
-        path: /ws
-        pathType: Prefix
-  tls:
-  - hosts:
-    - validator.$domain
-    secretName: validator-tls
-EOF
-```
 ### Build the geyser plugin using Docker
 
 Clone the repo

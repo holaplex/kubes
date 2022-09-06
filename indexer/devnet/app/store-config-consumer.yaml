@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: geyser-consumer
+  name: store-config-consumer
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -13,15 +13,15 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: geyser-consumer
+      app: store-config-consumer
   template:
     metadata:
       labels:
-        app: geyser-consumer
+        app: store-config-consumer
     spec:
       containers:
-      - name: geyser-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-4f0f2ed
+      - name: store-config-consumer
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-c8bc0fe
         envFrom:
         - configMapRef:
             name: indexer-config
@@ -29,8 +29,6 @@ spec:
             name: meili-creds
         - secretRef:
             name: amqp-creds
-        - secretRef:
-            name: dialect-creds
         env:
         - name: DATABASE_WRITE_URL
           valueFrom:
@@ -39,7 +37,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal --meili-url $MEILI_URL --meili-key $MEILI_KEY --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT & ./bin/holaplex-indexer-geyser --network=mainnet --startup=all --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT --meili-url $MEILI_URL --meili-key $MEILI_KEY"]
+        args: ["./bin/holaplex-indexer-http --entity store-config --sender devnet"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent

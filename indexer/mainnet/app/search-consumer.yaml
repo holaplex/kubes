@@ -1,7 +1,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: http-consumer
+  name: search-consumer
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
@@ -13,15 +13,15 @@ spec:
       maxUnavailable: 0
   selector:
     matchLabels:
-      app: http-consumer
+      app: search-consumer
   template:
     metadata:
       labels:
-        app: http-consumer
+        app: search-consumer
     spec:
       containers:
-      - name: http-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:http-consumer-dev-4f0f2ed
+      - name: search-consumer
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:search-consumer-dev-c8bc0fe
         envFrom:
         - configMapRef:
             name: indexer-config
@@ -29,6 +29,8 @@ spec:
             name: meili-creds
         - secretRef:
             name: amqp-creds
+        - secretRef:
+            name: dialect-creds
         env:
         - name: DATABASE_WRITE_URL
           valueFrom:
@@ -37,7 +39,14 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-http --entity metadata-json --sender mainnet --backfill-search"]
+        args: ["./bin/holaplex-indexer-search --sender mainnet"]
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 250m
+          limits:
+            memory: 2Gi
+            cpu: 2000m
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent

@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: validator-config
+data:
+  SSL_CERT_FILE: /etc/ssl/certs/ca-certificates.crt
+  SSL_CERT_DIR: /etc/ssl/certs
+  SOLANA_NETWORK: mainnet
+  SOLANA_SNAPSHOT_COMPRESSION: none
+  RPC_PORT: "10899"
+  SOLANA_METRICS_CONFIG: "host=http://influxdb-influxdb2.monitoring:80,db=mainnet,u=solana,p=your-custom-pw"
+  URL: https://api.mainnet-beta.solana.com
