@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mainnet-rpc
+  namespace: argocd
+  annotations:
+    notifications.argoproj.io/subscribe.on-deployed.slack: cicd-monitoring
+    notifications.argoproj.io/subscribe.on-health-degraded.slack: cicd-monitoring
+    notifications.argoproj.io/subscribe.on-sync-failed.slack: cicd-monitoring
+    notifications.argoproj.io/subscribe.on-sync-status-unknown.slack: cicd-monitoring
+    notifications.argoproj.io/subscribe.on-sync-succeeded.slack: cicd-monitoring
+spec:
+  project: mainnet-rpc
+  source:
+    repoURL: https://github.com/holaplex/kubes.git
+    targetRevision: main
+    path: rpc-reverse/app
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mainnet-solana
