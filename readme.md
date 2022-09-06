@@ -1,4 +1,4 @@
-# Description
+## Description
 This repository contains the required Kubernetes manifests to deploy the infrastructure you need to start developing in Solana right away, using the [Indexer Stack](https://github.com/holaplex/indexer) that powers [Holaplex](https://holaplex.com) and many other projects in the ecosystem.
 The steps below will describe how to deploy a *single node* Kubernetes cluster using `k3s` and all the components required to get up and running. Same steps apply if you are doing it locally or in any cloud provider. You should get a *Web2 like* development environment after completing all steps.
 
@@ -40,7 +40,7 @@ You can also host the Solana node in a different VM and join that machine to the
 
 Steps to install all dependencies is described in the following steps.
 
-# Getting started
+## Getting started
 
 ### Preparing your VM
 Create a Ubuntu 20.04 VM or spin up a cloud instance in your favourite provider and login as root trough SSH.
@@ -73,7 +73,7 @@ With everything installed, clone the `kubes` repository and `cd` into the folder
 git clone https://github.com/holaplex/kubes && cd kubes
 ```
 
-# Creating a single-node Kubernetes cluster with k3s
+## Creating a single-node Kubernetes cluster with k3s
 
 Change minimum resources reserved by k3s and node hard evictions.
 
@@ -114,7 +114,7 @@ Check that your cluster is running
 kubectl get pods -n kube-system
 ```
 
-# MetalLB
+## MetalLB
 Create MetalLB Namespace
 ```bash
 kubectl apply -f ./metallb/namespace.yaml
@@ -136,7 +136,7 @@ kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/confi
 kubectl wait --for=condition=Ready pod --timeout 60s -n metallb-system -l app=metallb -l component=speaker
 ```
 
-# NGINX Ingress
+## NGINX Ingress
 ```bash
 #Deploy nginx ingress using type LoadBalancer
 curl -sfL https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml | sed 's#type: NodePort#type: LoadBalancer#g' | kubectl apply -f -
@@ -144,7 +144,7 @@ curl -sfL https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy
 kubectl wait pod --for=condition=Ready --timeout 60s -n ingress-nginx -l app.kubernetes.io/component=controller
 ```
 
-# Cert Manager
+## Cert Manager
 
 Get the latest version from the releases page and install with `helm`.
 ```bash
@@ -159,7 +159,7 @@ helm upgrade --install \
   --version $latest
 ```
 
-# LetsEncrypt Certificate Issuers
+## LetsEncrypt Certificate Issuers
 This step is required *only if you need SSL Certs for your ingresses*.
 ```bash
 #Email address to use for cert renewal notifications
@@ -167,13 +167,13 @@ email="mariano@holaplex.com"
 sed "s#YOUR_EMAIL#${email}#g" ./cert-manager/certissuers/letsencrypt.yaml | kubectl apply -f -
 ```
 
-# External DNS
+## External DNS
 ```bash
 latest=$(curl -s https://api.github.com/repos/kubernetes-sigs/external-dns/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
 sed "s#YOUR_ZONE_ID#${cloudflare_zone_id}#g;s#YOUR_API_TOKEN#${cloudflare_api_token}#g" ./external-dns/deploy.yaml | kubectl apply -f  -
 ```
 
-# Docker registry
+## Docker registry
 This step can be skipped if you are using any other public registry for your indexer images.
 
 ### Deploying
@@ -204,7 +204,7 @@ EOF"
 sudo systemctl restart k3s
 ```
 
-# RabbitMQ
+## RabbitMQ
 RabbitMQ Will be installed using Helm.
 
 ```bash
@@ -238,7 +238,7 @@ Create an ingress for RabbitMQ console. Will be available at `rabbit.$domain`.
 sed "s#YOUR_DOMAIN#${domain}#g" ./rabbitmq/ingress.yaml | kubectl apply -f -
 ```
 
-# KEDA
+## KEDA
 Pod autoscaling for Rabbit Message queues.
 ```bash
 helm repo add kedacore https://kedacore.github.io/charts
@@ -247,7 +247,7 @@ helm install keda kedacore/keda --namespace keda --create-namespace
 #Auto-scaling policies will be deployed later.
 ```
 
-# Meilisearch
+## Meilisearch
 Search backend for the indexer.
 Add the Meilisearch Helm repo.
 
@@ -284,7 +284,7 @@ sed "s#YOUR_DOMAIN#${domain}#g" ./meilisearch/ingress.yaml | kubectl apply -f -
 ```
 Endpoint will be `search.$domain`
 
-# Postgres
+## Postgres
 
 Clone Zalando's Postgres operator repo
 ```bash
@@ -376,7 +376,7 @@ export DATABASE_URL="postgres://$db_user:$PGPASSWORD@$team-$db_cluster_name.$nam
 kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace --restart='Never' --image docker.io/bitnami/postgresql:14-debian-10 -- psql $(echo $DATABASE_URL | sed 's/\/indexer//g') -c "create database $db_name"
 ```
 
-# Indexer
+## Indexer Stack
 
 ### Building the docker images and pushing to local registry
 Run the `build_images.sh` script to clone the indexer stack repository and build the docker images.
@@ -457,7 +457,7 @@ spec:
 EOF
 ```
 
-# Solana Node deployment
+## Solana Node deployment
 
 More info on how to deploy a validator (To use as reference is something is not working or want to learn more):
 - [How to run a Solana node](https://chainstack.com/how-to-run-a-solana-node/) By Chainstack
