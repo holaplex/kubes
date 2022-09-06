@@ -18,7 +18,7 @@ solana-validator  \
 --entrypoint=entrypoint5.devnet.solana.com:8001 \
 --no-untrusted-rpc \
 --no-voting \
---dynamic-port-range 8000-8013 \
+--dynamic-port-range=8000-8013 \
 --expected-genesis-hash=EtWTRABZaYq6iMfeYKouRu166VU2xqa1wcaWoxPkrZBG \
 --wal-recovery-mode=skip_any_corrupted_record \
 --geyser-plugin-config=/root/geyser-config.json \

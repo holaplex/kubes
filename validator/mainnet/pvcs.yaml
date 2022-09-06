@@ -1,0 +1,50 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: validator-data-pv
+spec:
+  capacity:
+    storage: 500Gi
+  volumeMode: Filesystem
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Delete
+  claimRef:
+    namespace: devnet-solana
+    name: validator-data-pvc
+  local:
+    path: /mnt/volume_nyc1_01/validator/devnet
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: validator
+          operator: In
+          values:
+          - "true"
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: validator-data-pvc
+  labels:
+    app: validator
+spec:
+ accessModes:
+   - ReadWriteOnce
+ resources:
+   requests:
+      storage: 500Gi
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: geyser-plugin-data-pvc
+  labels:
+    app: geyser-plugin
+spec:
+ accessModes:
+   - ReadWriteOnce
+ resources:
+   requests:
+      storage: 1Gi

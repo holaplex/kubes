@@ -576,10 +576,15 @@ cat <<EOF>> ./$network/geyser-config.json
       "Govz1VyoyLD5BL6CSCxUJLVLsQHRwjfFj1prNsdNg5Jw",
       "GokivDYuQXPZCWRkwMhdH2h91KpDQXBEmpgBgs55bnpH"
     ],
-    "startup": false
+    "startup": null
   },
   "instructions": {
-    "programs": []
+    "programs": [
+      "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+      "MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8",
+      "hausS13jsjafwWwGqZTUQRmWyvyxn9EQpqMwV1PBBmk",
+      "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+    ]
   }
 }
 EOF
@@ -594,7 +599,7 @@ kubectl create cm geyser-plugin-config --from-file=./$network/geyser-config.json
 Create a mount folder for the validator data and set the variable `validator_data_path` accordingly.
 Ideally, you'll use a separate SSD for the ledger.
 ```bash
-validator_data_path="/mnt/p3600/validator/$network"
+validator_data_path="/mnt/<your-drive-name>/validator/$network"
 sudo mkdir -p $validator_data_path && sudo chown $USER:$USER $validator_data_path
 ```
 
@@ -604,7 +609,7 @@ cat <<EOF | kubectl apply -f -
 apiVersion: v1
 kind: PersistentVolume
 metadata:
-  name: $network-validator-data-pv
+  name: validator-data-pv
 spec:
   capacity:
     storage: 500Gi
@@ -612,9 +617,8 @@ spec:
   accessModes:
   - ReadWriteOnce
   persistentVolumeReclaimPolicy: Delete
-  storageClassName: ""
   claimRef:
-    namespace: $namespace
+    namespace: $network-solana
     name: validator-data-pvc
   local:
     path: $validator_data_path
@@ -634,7 +638,6 @@ metadata:
   labels:
     app: validator
 spec:
- storageClassName: ""
  accessModes:
    - ReadWriteOnce
  resources:
@@ -668,7 +671,7 @@ kubectl apply -f ./$network/deploy.yaml -n $namespace
 
 Expose the RPC endpoint (optional)
 ```bash
-kubectl apply -f ./service.yaml -n $namespace
+kubectl apply -f ./$network/service.yaml -n $namespace
 ```
 
 Create an ingress for the RPC Http endpoint
@@ -679,58 +682,33 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/hostname: validator.$domain
-    nginx.ingress.kubernetes.io/backend-protocol: "GRPC"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    external-dns.alpha.kubernetes.io/hostname: rpc.$domain
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "POST, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "solana-client,DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin"
   name: validator-rpc-http
 spec:
   ingressClassName: nginx
   rules:
-  - host: validator.$domain
+  - host: rpc.$domain
     http:
       paths:
       - backend:
           service:
-            name: rpc-ports
+            name: validator
             port:
-              name: rpc-http
+              number: 10899
         path: /
         pathType: Prefix
   tls:
   - hosts:
-    - validator.$domain
+    - rpc.$domain
     secretName: validator-tls
 EOF
 ```
 
-Create an ingress for the RPC Websocket endpoint
-```yaml
-cat <<EOF | kubectl apply -f -
-apiVersion: networking.k8s.io/v1
-kind: Ingress
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-    external-dns.alpha.kubernetes.io/hostname: validator.$domain
-  name: validator-rpc-ws
-spec:
-  ingressClassName: nginx
-  rules:
-  - host: validator.$domain
-    http:
-      paths:
-      - backend:
-          service:
-            name: rpc-ports
-            port:
-              name: rpc-http
-        path: /ws
-        pathType: Prefix
-  tls:
-  - hosts:
-    - validator.$domain
-    secretName: validator-tls
-EOF
-```
 ### Build the geyser plugin using Docker
 
 Clone the repo

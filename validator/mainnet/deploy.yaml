@@ -7,10 +7,7 @@ metadata:
 spec:
   replicas: 1
   strategy:
-    type: RollingUpdate
-    rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+    type: Recreate
   selector:
     matchLabels:
       app: validator
@@ -33,43 +30,38 @@ spec:
           - name: geyser-plugin
             mountPath: /geyser
       containers:
-      - image: solanalabs/solana:v1.10.27
+      - image: solanalabs/solana:v1.10.38
         name: watchtower
         command: ["solana-watchtower"]
-        env:
-        - name: SSL_CERT_FILE
-          value: /etc/ssl/certs/ca-certificates.crt
-        - name: SSL_CERT_DIR
-          value: /etc/ssl/certs
-        - name: SOLANA_METRICS_CONFIG
-          value: "host=http://influxdb-influxdb2.monitoring,db=mainnet,u=solana,p=YOUR_INFLUXDB_PW"
-        - name: SOLANA_NETWORK
-          value: mainnet-beta
+        envFrom:
+        - configMapRef:
+            name: validator-config
         volumeMounts:
         - name: ca-certificates
           mountPath: /etc/ssl/certs/ca-certificates.crt
           subPath: ca-certificates.crt
-      - image: solanalabs/solana:v1.10.27
+      - image: solanalabs/solana:v1.10.38
         resources:
           limits:
-            memory: "126Gi"
+            memory: "240Gi"
+            cpu: "30000m"
           requests:
-            memory: "64Gi"
+            memory: "186Gi"
+            cpu: "8000m"
         imagePullPolicy: IfNotPresent
         name: validator
-        env:
-        - name: SSL_CERT_FILE
-          value: /etc/ssl/certs/ca-certificates.crt
-        - name: SSL_CERT_DIR
-          value: /etc/ssl/certs
-        - name: SOLANA_NETWORK
-          value: mainnet-beta
-        - name: SOLANA_SNAPSHOT_COMPRESSION
-          value: none
-        - name: SOLANA_METRICS_CONFIG
-          value: "host=http://influxdb-influxdb2.monitoring,db=mainnet,u=solana,p=YOUR_INFLUXDB_PW"
+        envFrom:
+        - configMapRef:
+            name: validator-config
         command: ["/bin/sh", "-c"]
         args: ["/root/startup.sh"]
+        ports:
+        - containerPort: 10899
+          name: rpc
+          protocol: TCP
+        - containerPort: 10900
+          name: rpc-ws
+          protocol: TCP
         volumeMounts:
         - name: ca-certificates
           mountPath: /etc/ssl/certs/ca-certificates.crt
