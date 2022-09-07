@@ -30,6 +30,8 @@ spec:
           value: https://github.com/holaplex/indexer
         - name: RUST_LOG
           value: debug
+        - name: BATCH_SIZE
+          value: "100000"
         - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
