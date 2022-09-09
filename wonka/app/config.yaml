@@ -5,3 +5,4 @@ metadata:
 data:
   RPC_ENDPOINT: https://holaplex-main-9e4a.mainnet.rpcpool.com
   APP_ENV: development
+  TMP_STORAGE_DIR: /app/tmp
