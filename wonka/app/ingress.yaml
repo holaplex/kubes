@@ -6,16 +6,27 @@ metadata:
     #nginx.ingress.kubernetes.io/secure-backends: "true"
     #nginx.ingress.kubernetes.io/proxy-ssl-verify: "off"
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
-  name: cm-factory
+  name: wonka
 spec:
   ingressClassName: nginx
   rules:
+  - host: wonka.dev.holaplex.tools
+    http:
+      paths:
+      - backend:
+          service:
+            name: wonka
+            port:
+              number: 3000
+        path: /graphql
+        pathType: Prefix
+
   - host: factory.dev.holaplex.tools
     http:
       paths:
       - backend:
           service:
-            name: cm-factory
+            name: wonka
             port:
               number: 3000
         path: /graphql
@@ -23,3 +34,4 @@ spec:
   tls:
   - hosts:
     - factory.dev.holaplex.tools
+    - wonka.dev.holaplex.tools

@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: wonka
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      app: wonka
+  template:
+    metadata:
+      labels:
+        app: wonka
+    spec:
+      containers:
+      - name: wonka
+        envFrom:
+        - configMapRef:
+            name: config
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/wonka:main-8e32c7c
+        imagePullPolicy: Always
+        resources:
+          requests:
+            memory: 2Gi
+            cpu: 1000m
+          limits:
+            memory: 16Gi
+            cpu: 4000m
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+          - name: tmp-storage
+            mountPath: /app/tmp
+      volumes:
+        - name: tmp-storage
+          persistentVolumeClaim:
+            claimName: wonka-tmp-files-pvc

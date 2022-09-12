@@ -1,18 +1,18 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: stage-cm-factory
+  name: stage-wonka
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  description: cm-factory App
+  description: wonka App
   # Allow manifests to deploy from any Git repos
   sourceRepos:
   - '*'
-  # Only permit applications to deploy to the cm-factory namespace in the same cluster
+  # Only permit applications to deploy to the wonka namespace in the same cluster
   destinations:
-  - namespace: stage-cm-factory
+  - namespace: stage-wonka
     server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
@@ -37,11 +37,15 @@ spec:
     kind: StatefulSet
   - group: networking.k8s.io
     kind: Ingress
+  - group:  ''
+    kind: PersistentVolumeClaim
+  - group: ''
+    kind: '*'
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
-    description: Read-only privileges to stage-cm-factory
+    description: Read-only privileges to stage-wonka
     policies:
-    - p, proj:stage-cm-factory:read-only, applications, get, stage-cm-factory/*, allow
+    - p, proj:stage-wonka:read-only, applications, get, stage-wonka/*, allow
     groups:
     - my-oidc-group
