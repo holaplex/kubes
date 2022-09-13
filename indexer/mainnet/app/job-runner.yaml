@@ -28,11 +28,11 @@ spec:
         - secretRef:
             name: amqp-creds
         env:
-        - name: DATABASE_WRITE_URL
+        - name: DATABASE_URL
           valueFrom:
             secretKeyRef:
               name: postgres-creds-url
-              key: DATABASE_URL
+              key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
         args: ["./bin/holaplex-indexer-job-runner --sender=mainnet"]
