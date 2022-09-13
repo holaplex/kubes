@@ -28,7 +28,7 @@ spec:
         - secretRef:
             name: amqp-creds
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-job-runner --network=mainnet"]
+        args: ["./bin/holaplex-indexer-job-runner --sender=mainnet"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
