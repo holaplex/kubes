@@ -1,0 +1,49 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: 1d-volume-migration
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  schedule: "*/5 * * * *"
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: 1d-volume-migration
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: psql
+            image: docker.io/bitnami/postgresql:14-debian-10
+            env:
+            - name: REPO_URL
+              value: https://github.com/holaplex/indexer
+            - name: GIT_BRANCH
+              value: dev
+            - name: REPO_PATH
+              value: crates/core/migrations/2022-09-12-154321_update_1d_collection_volume/up.sql
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds-url
+                  key: DATABASE_WRITE_URL
+                  optional: false
+            command: ["/bin/bash","-c"]
+            args: ["/script/psql-run.sh"]
+            securityContext:
+              allowPrivilegeEscalation: false
+            imagePullPolicy: IfNotPresent
+            volumeMounts:
+            - name: script
+              mountPath: /script/psql-run.sh
+              subPath: run.sh
+          dnsConfig:
+            options:
+            - name: ndots
+              value: "3"
+          volumes:
+          - name: script
+            configMap:
+              name: psql-run-script
+              defaultMode: 0777
