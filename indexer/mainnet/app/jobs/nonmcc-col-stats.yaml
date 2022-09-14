@@ -1,18 +1,18 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: 30d-volume-migration
+  name: nonmcc-colstats-migration
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  schedule: "0 */12 * * *"
+  schedule: "0 */6 * * *"
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
         metadata:
-          name: 30d-volume-migration
+          name: nonmcc-colstats-migration
         spec:
           restartPolicy: OnFailure
           containers:
@@ -24,7 +24,7 @@ spec:
             - name: GIT_BRANCH
               value: dev
             - name: REPO_PATH
-              value: crates/core/migrations/2022-09-12-154329_update_30d_collection_volume/up.sql
+              value: crates/core/migrations/2022-09-14-081546_add_me_collection_stats_table/up.sql
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
