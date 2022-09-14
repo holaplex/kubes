@@ -6,6 +6,8 @@ metadata:
     reloader.stakater.com/auto: "true"
 spec:
   schedule: "* */12 * * *"
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
