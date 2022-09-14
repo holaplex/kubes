@@ -15,6 +15,8 @@ spec:
     repoURL: https://github.com/holaplex/kubes.git
     targetRevision: dev
     path: indexer/mainnet/app
+    directory:
+      recurse: true
   destination:
     server: https://kubernetes.default.svc
     namespace: stage-indexer

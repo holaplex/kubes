@@ -39,7 +39,7 @@ spec:
     kind: Ingress
   - group:  ''
     kind: PersistentVolumeClaim
-  - group: ''
+  - group: '*'
     kind: '*'
   roles:
   # A role which provides read-only access to all applications in the project
