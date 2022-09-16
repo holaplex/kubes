@@ -54,14 +54,14 @@ spec:
   pollingInterval: 60
   cooldownPeriod:  300
   minReplicaCount: 1
-  maxReplicaCount: 8
+  maxReplicaCount: 10
   triggers:
   - type: rabbitmq
     metadata:
       protocol: amqp
       queueName: mainnet.metadata-json.http.indexer
       mode: QueueLength
-      value: "10000"
+      value: "5000"
       metricName: http-consumer-scaling
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
