@@ -43,10 +43,10 @@ spec:
       - image: solanalabs/solana:v1.10.38
         resources:
           limits:
-            memory: "240Gi"
-            cpu: "30000m"
+            memory: "250Gi"
+            cpu: "20000m"
           requests:
-            memory: "186Gi"
+            memory: "230Gi"
             cpu: "8000m"
         imagePullPolicy: IfNotPresent
         name: validator
