@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: web3auth-frontend
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web3auth-frontend
+  template:
+    metadata:
+      labels:
+        app: web3auth-frontend
+    spec:
+      containers:
+      - name: frontend
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/web3auth:frontend-main-v6
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        envFrom:
+        - configMapRef:
+            name: web3auth-config
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web3auth-frontend
+spec:
+  selector:
+    app: web3auth-frontend
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP

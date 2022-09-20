@@ -19,18 +19,18 @@ jobs:
       - name: Update deployment image version
         run: |
             git_branch=${GITHUB_REF##*/}
-            repo=holaplex
+            repo=web3auth-jwt-jwk-demo
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
-            #Frontend
+            #frontend
             app=frontend
-            deployment_file="./$repo/app/$app.yaml"
+            deployment_file="./w3auth/app/$app.yaml"
             image_tag=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
             echo "Updating ${app} deployment with new image tag"
             sed -i "s/$image_tag/$app-$git_branch-$git_hash/" $deployment_file
-            #Signer
-            app=signer
-            deployment_file="./$repo/app/$app.yaml"
+            #backend
+            app=backend
+            deployment_file="./w3auth/app/$app.yaml"
             image_tag=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
             echo "Updating ${app} deployment with new image tag"
             sed -i "s/$image_tag/$app-$git_branch-$git_hash/" $deployment_file

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+  name: web3auth-backend
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: web3auth-backend
+  template:
+    metadata:
+      labels:
+        app: web3auth-backend
+    spec:
+      containers:
+      - name: backend
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/web3auth:backend-main
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 3000
+        volumeMounts:
+        - name: private-pem
+          mountPath: "/app/Private Key (X.509 PEM Format).pem"
+          subPath: private-key.pem
+        - name: public-pem
+          mountPath: "/app/Public Key (X.509 PEM Format).pem"
+          subPath: public-key.pem
+      volumes:
+      - name: private-pem
+        configMap:
+          name: private-pem
+      - name: public-pem
+        configMap:
+          name: public-pem
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web3auth-backend
+spec:
+  selector:
+    app: web3auth-backend
+  ports:
+  - port: 3000
+    targetPort: 3000
+    protocol: TCP
