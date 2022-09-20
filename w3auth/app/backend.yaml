@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/web3auth:backend-main-96dbfb9
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/web3auth:backend-main-781d94a
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
