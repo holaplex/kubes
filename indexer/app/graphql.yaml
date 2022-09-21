@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: graphql
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-master-6f948af
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-master-7669435
         envFrom:
         - configMapRef:
             name: indexer-config
