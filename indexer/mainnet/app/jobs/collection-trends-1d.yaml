@@ -1,11 +1,11 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: 7d-volume-migration
+  name: 1d-collection-trends
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  schedule: "1 */2 * * *"
+  schedule: "*/11 * * * *"
   suspend: true
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
@@ -13,7 +13,7 @@ spec:
     spec:
       template:
         metadata:
-          name: 7d-volume-migration
+          name: 1d-collection-trends
         spec:
           restartPolicy: OnFailure
           containers:
@@ -21,11 +21,11 @@ spec:
             image: docker.io/bitnami/postgresql:14-debian-10
             env:
             - name: REPO_URL
-              value: https://github.com/holaplex/indexer
+              value: https://github.com/holaplex/kubes
             - name: GIT_BRANCH
               value: dev
             - name: REPO_PATH
-              value: crates/core/migrations/2022-09-12-154326_update_7d_collection_volume/up.sql
+              value: indexer/mainnet/app/jobs/migrations/2022-09-19-181659_update_collection_trends_1d_floor_price_and_sales_count/up.sql
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
