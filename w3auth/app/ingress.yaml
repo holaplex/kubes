@@ -43,7 +43,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: api-w3auth.holaplex.tools
+  - host: campus-auth-server.holaplex.tools
     http:
       paths:
         - path: /
@@ -55,5 +55,5 @@ spec:
                 number: 3000
   tls:
   - hosts:
-    - api-w3auth.holaplex.tools
+    - campus-auth-server.holaplex.tools
     secretName: com-api-web3auth-frontend-tls

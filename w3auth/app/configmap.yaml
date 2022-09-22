@@ -3,4 +3,4 @@ kind: ConfigMap
 metadata:
   name: web3auth-config
 data:
-  NEXT_PUBLIC_BACKEND_ENDPOINT: "https://api-w3auth.holaplex.tools"
+  NEXT_PUBLIC_BACKEND_ENDPOINT: "https://campus-auth-server.holaplex.tools"
