@@ -39,7 +39,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal --meili-url $MEILI_URL --meili-key $MEILI_KEY --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT"]
+        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
@@ -62,7 +62,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=all --dialect-api-key $DIALECT_API_KEY --dialect-api-endpoint $DIALECT_API_ENDPOINT --meili-url $MEILI_URL --meili-key $MEILI_KEY"]
+        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=all"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
