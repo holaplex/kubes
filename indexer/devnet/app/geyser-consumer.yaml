@@ -39,7 +39,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal"]
+        args: ["./bin/holaplex-indexer-geyser --network=devnet --startup=normal"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
@@ -62,7 +62,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=all"]
+        args: ["./bin/holaplex-indexer-geyser --network=devnet --startup=all"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
