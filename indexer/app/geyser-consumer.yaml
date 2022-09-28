@@ -40,10 +40,34 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         command: ["/bin/bash","-c"]
-        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal & ./bin/holaplex-indexer-geyser --network=mainnet --startup=all"]
+        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=normal"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
+      - name: geyser-consumer-startup
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-master-06e8361
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: amqp-creds
+        - secretRef:
+            name: dialect-creds
+        env:
+        - name: DATABASE_WRITE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds-url
+              key: DATABASE_WRITE_URL
+              optional: false
+        command: ["/bin/bash","-c"]
+        args: ["./bin/holaplex-indexer-geyser --network=mainnet --startup=all"]
+        securityContext:
+          allowPrivilegeEscalation: false
+        imagePullPolicy: IfNotPresent
+
       dnsConfig:
         options:
         - name: ndots
