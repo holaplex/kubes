@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: job-runner
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:job-runner-dev-b49e357
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:job-runner-dev-1b2395b
         envFrom:
         - configMapRef:
             name: indexer-config
