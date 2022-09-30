@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: Service
+metadata:
+  annotations:
+    meta.helm.sh/release-name: rabbitmq
+    meta.helm.sh/release-namespace: rabbitmq-system
+  labels:
+    app.kubernetes.io/instance: rabbitmq
+    app.kubernetes.io/managed-by: Helm
+    app.kubernetes.io/name: rabbitmq
+    helm.sh/chart: rabbitmq-10.3.6
+  name: rabbitmq-node-port
+  namespace: rabbitmq-system
+spec:
+  ports:
+  - name: amqp
+    port: 5672
+    protocol: TCP
+    targetPort: amqp
+    nodePort: 31863
+  selector:
+    app.kubernetes.io/instance: rabbitmq
+    app.kubernetes.io/name: rabbitmq
+  sessionAffinity: None
+  type: NodePort

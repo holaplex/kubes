@@ -19,6 +19,13 @@ spec:
               name: http-stats
         path: /
         pathType: Prefix
+      - backend:
+          service:
+            name: rabbitmq
+            port:
+              name: metrics
+        path: /metrics
+        pathType: Prefix
   tls:
   - hosts:
     - rabbit.YOUR_DOMAIN

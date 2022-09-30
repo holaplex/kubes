@@ -215,6 +215,8 @@ helm repo add bitnami https://charts.bitnami.com/bitnami
 helm repo update
 helm upgrade rabbitmq --install -n rabbitmq-system --create-namespace bitnami/rabbitmq \
   --set clustering.enabled=false \
+  --set metrics.enabled=true \
+  --set metrics.plugins=rabbitmq_prometheus \
   --set auth.username=$rabbitmq_user --set auth.password=$rabbitmq_password \
   --set persistence.size=50Gi \
   --wait
