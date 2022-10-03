@@ -3,6 +3,6 @@ kind: ConfigMap
 metadata:
   name: config
 data:
-  RPC_ENDPOINT: https://holaplex-main-9e4a.mainnet.rpcpool.com
+  RPC_ENDPOINT: https://rpc.mainnet.holaplex.tools
   APP_ENV: development
   TMP_STORAGE_DIR: /app/tmp
