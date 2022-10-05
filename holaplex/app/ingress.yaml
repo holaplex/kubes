@@ -48,5 +48,7 @@ spec:
   tls:
   - hosts:
     - holaplex.com
-    - market.holaplex.com
     secretName: com-hola-frontend-tls
+  - hosts:
+    - market.holaplex.com
+    secretName: com-market-hola-frontend-tls
