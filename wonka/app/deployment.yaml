@@ -18,11 +18,11 @@ spec:
       containers:
       - name: wonka
         env:
-        - name: SOLANA_RPC_URL
+        - name: RPC_ENDPOINT
           valueFrom:
             secretKeyRef:
               name: app-creds
-              key: RPC_ENDPOINT
+              key: SOLANA_RPC_URL
               optional: false
         envFrom:
         - configMapRef:
