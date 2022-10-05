@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: w3auth-demo
+  name: stage-w3auth
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -42,8 +42,8 @@ spec:
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
-    description: Read-only privileges to w3auth-demo
+    description: Read-only privileges to stage-w3auth
     policies:
-    - p, proj:w3auth-demo:read-only, applications, get, w3auth-demo/*, allow
+    - p, proj:stage-w3auth:read-only, applications, get, stage-w3auth/*, allow
     groups:
     - my-oidc-group
