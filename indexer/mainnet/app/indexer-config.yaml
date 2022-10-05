@@ -11,6 +11,7 @@ data:
   ASSET_PROXY_COUNT: "5"
   ASSET_PROXY_ENDPOINT: https://assets[n].holaplex.tools/
   UPSERT_BATCH: "100000"
+  HTTP_INDEXER_TIMEOUT: "1"
   UPSERT_INTERVAL: "3600"
   METADATA_JSON: "true"
   SOLANA_ENDPOINT: https://rpc.mainnet.holaplex.tools
