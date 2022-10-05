@@ -13,7 +13,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: w3auth.holaplex.tools
+  - host: w3auth.dev.holaplex.tools
     http:
       paths:
         - path: /
