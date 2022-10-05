@@ -27,7 +27,7 @@ spec:
         envFrom:
         - configMapRef:
             name: config
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/wonka:main-2940265
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/wonka:main-c79496a
         imagePullPolicy: Always
         resources:
           requests:
