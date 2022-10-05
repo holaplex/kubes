@@ -12,7 +12,7 @@ spec:
   - '*'
   # Only permit applications to deploy to the nightmarket namespace in the same cluster
   destinations:
-  - namespace: web3auth
+  - namespace: stage-w3auth
     server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:

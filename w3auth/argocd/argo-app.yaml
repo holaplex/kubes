@@ -17,4 +17,4 @@ spec:
     path: w3auth/app
   destination:
     server: https://kubernetes.default.svc
-    namespace: web3auth
+    namespace: stage-w3auth
