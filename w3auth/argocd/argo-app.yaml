@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: w3auth-demo
+  name: prod-w3auth
   namespace: argocd
   annotations:
     notifications.argoproj.io/subscribe.on-deployed.slack: cicd-monitoring
@@ -10,11 +10,11 @@ metadata:
     notifications.argoproj.io/subscribe.on-sync-status-unknown.slack: cicd-monitoring
     notifications.argoproj.io/subscribe.on-sync-succeeded.slack: cicd-monitoring
 spec:
-  project: w3auth-demo
+  project: prod-w3auth
   source:
     repoURL: https://github.com/holaplex/kubes.git
     targetRevision: main
     path: w3auth/app
   destination:
     server: https://kubernetes.default.svc
-    namespace: web3auth
+    namespace: prod-w3auth

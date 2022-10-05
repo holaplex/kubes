@@ -34,7 +34,19 @@ spec:
               name: hola-frontend
               port:
                 number: 3000
+
+  - host: market.holaplex.com
+    http:
+      paths:
+        - path: /
+          pathType: Prefix
+          backend:
+            service:
+              name: hola-frontend
+              port:
+                number: 3000
   tls:
   - hosts:
     - holaplex.com
+    - market.holaplex.com
     secretName: com-hola-frontend-tls

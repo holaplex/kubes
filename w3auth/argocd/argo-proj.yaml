@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: w3auth-demo
+  name: prod-w3auth
   namespace: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
@@ -12,7 +12,7 @@ spec:
   - '*'
   # Only permit applications to deploy to the nightmarket namespace in the same cluster
   destinations:
-  - namespace: web3auth
+  - namespace: prod-w3auth
     server: https://kubernetes.default.svc
   # Deny all cluster-scoped resources from being created, except for Namespace
   clusterResourceWhitelist:
@@ -42,8 +42,8 @@ spec:
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
-    description: Read-only privileges to w3auth-demo
+    description: Read-only privileges to prod-w3auth
     policies:
-    - p, proj:w3auth-demo:read-only, applications, get, w3auth-demo/*, allow
+    - p, proj:prod-w3auth:read-only, applications, get, prod-w3auth/*, allow
     groups:
     - my-oidc-group
