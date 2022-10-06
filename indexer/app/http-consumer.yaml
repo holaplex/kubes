@@ -31,6 +31,8 @@ spec:
         - secretRef:
             name: amqp-creds
         env:
+        - name: ASSET_PROXY_ENDPOINT
+          value: "http://imgopt.assets.svc/"
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
