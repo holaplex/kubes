@@ -9,7 +9,6 @@ data:
   ARWEAVE_CDN: https://arweave.net
   ARWEAVE_URL: https://arweave.net
   ASSET_PROXY_COUNT: "5"
-  ASSET_PROXY_ENDPOINT: https://assets[n].holaplex.tools/
   UPSERT_BATCH: "100000"
   UPSERT_INTERVAL: "3600"
   METADATA_JSON: "true"
