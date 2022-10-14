@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: moonrank-collections
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  schedule: "7 */6 * * *"
+  suspend: false
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: moonrank-collections
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: moonrank
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-db29e97
+            env:
+            - name: MOONRANK_ENDPOINT
+              value: https://moonrank.app
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds-url
+                  key: DATABASE_WRITE_URL
+                  optional: false
+            command: ["/bin/bash","-c"]
+            args: ["./bin/moonrank-collections-indexer"]
+            securityContext:
+              allowPrivilegeEscalation: false
+            imagePullPolicy: IfNotPresent
+          dnsConfig:
+            options:
+            - name: ndots
+              value: "3"
