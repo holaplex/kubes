@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: smol-kv
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: smol-kv
+  template:
+    metadata:
+      annotations:
+        linkerd.io/inject: enabled
+      labels:
+        app: smol-kv
+    spec:
+      containers:
+      - image: ghcr.io/mpwsh/smol-kv:amd64-latest
+        imagePullPolicy: Always
+        name: smol-kv
+        env:
+        - name: LOG_LEVEL
+          value: info
+        - name: DATABASE_PATH
+          value: "/rocksdb"
+        - name: WORKERS
+          value: "8"
+        ports:
+        - containerPort: 5050
+          name: smol-kv
+        resources:
+          requests:
+            memory: 128Mi
+            cpu: 250m
+          limits:
+            memory: 2Gi
+            cpu: 1000m
+        volumeMounts:
+        - name: storage
+          mountPath: /rocksdb
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName:  smol-kv-pvc
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: smol-kv-pvc
+  namespace: assets
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: smol-kv
+spec:
+  selector:
+    app: smol-kv
+  ports:
+  - name: http
+    port: 5050
+    targetPort: 5050
+  type: LoadBalancer
