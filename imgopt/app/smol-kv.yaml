@@ -27,7 +27,7 @@ spec:
         name: smol-kv
         env:
         - name: LOG_LEVEL
-          value: info
+          value: warn
         - name: DATABASE_PATH
           value: "/rocksdb"
         - name: WORKERS
