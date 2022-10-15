@@ -7,9 +7,9 @@ data:
     port = 3030
     #CPU Threads for actix
     workers = 8
-    #timeout when contacting listed services
+    #timeout when contacting listed origins
     req_timeout = 600
-    #Limit response size from your services
+    #Limit response size from your origins
     max_body_size_bytes = 200000000 # 200 MB
     #For load balancer liveness Probe
     health_endpoint = "/health"
@@ -32,13 +32,13 @@ data:
     #max age header for twitter responses (in seconds) (optional)
     twitter.cache.max_age = 86400 #24 hours
 
-    #Services
-    [[services]]
+    #origins
+    [[origins]]
     name = "ipfs"
     endpoint = "https://ipfs.io/ipfs"
     cache.max_age = 31536000
 
-    [[services]]
+    [[origins]]
     name = "arweave"
     endpoint = "https://arweave.net"
     cache.max_age = 31536000
