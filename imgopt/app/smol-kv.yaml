@@ -73,4 +73,4 @@ spec:
   - name: http
     port: 5050
     targetPort: 5050
-  type: LoadBalancer
+  type: ClusterIP
