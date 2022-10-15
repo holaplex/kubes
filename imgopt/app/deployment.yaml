@@ -16,8 +16,6 @@ spec:
       app: imgopt
   template:
     metadata:
-      annotations:
-        linkerd.io/inject: enabled
       labels:
         app: imgopt
     spec:
