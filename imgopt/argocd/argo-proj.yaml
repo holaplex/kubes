@@ -35,6 +35,11 @@ spec:
     kind: Deployment
   - group: 'apps'
     kind: StatefulSet
+  - group:  ''
+    kind: PersistentVolumeClaim
+  - group: ''
+    kind: '*'
+
   roles:
   # A role which provides read-only access to all applications in the project
   - name: read-only
