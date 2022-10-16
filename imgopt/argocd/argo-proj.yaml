@@ -37,7 +37,7 @@ spec:
     kind: StatefulSet
   - group:  ''
     kind: PersistentVolumeClaim
-  - group: ''
+  - group: '*'
     kind: '*'
 
   roles:
