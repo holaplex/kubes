@@ -20,9 +20,9 @@ spec:
         app: imgopt
     spec:
       containers:
-      - image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/imgopt:main-eeb12e3
+      - name: imgopt
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/imgopt:main-b134f11
         imagePullPolicy: IfNotPresent
-        name: imgopt
         command: ["./imgopt"]
         env:
         - name: CONFIG_PATH
