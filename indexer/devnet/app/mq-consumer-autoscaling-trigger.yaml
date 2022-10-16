@@ -48,6 +48,8 @@ kind: ScaledObject
 metadata:
   name: http-consumer-scaling
   namespace: devnet-indexer
+  annotations:
+    autoscaling.keda.sh/paused-replicas: "0"
 spec:
   scaleTargetRef:
     name: http-consumer
