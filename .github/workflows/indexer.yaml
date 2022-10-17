@@ -46,6 +46,10 @@ jobs:
                if [ $app = 'store-config-consumer' ];then
                   app=http-consumer
                fi
+               #Skip jobs on devnet for now
+               if [ $app = 'burn-fix' ] || [ $app = 'jobs/moonrank' ];then
+                  continue
+               fi
                sed -i "s/$version/$app-$git_branch-$git_hash/g" $deployment_file
             done
 
