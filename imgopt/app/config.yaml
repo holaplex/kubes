@@ -2,7 +2,7 @@ apiVersion: v1
 data:
   config.toml: |
     #Possible values -- debug, info, warn, error
-    log_level = "error"
+    log_level = "warn"
     #port for the server to listen on
     port = 3030
     #CPU Threads for actix
@@ -23,7 +23,6 @@ data:
 
     #Skip certain images from processing (optional)
     #skip_list = ["bafybeih6zvkw6fenaprelv45b4zjzazi3mvogvkq6ws75ywyphjk4iyqwi"]
-    #
     #Enable '?url=' query parameter
     allow_any_origin = true
     kvstore_uri = "http://smol-kv.assets.svc:5050"
