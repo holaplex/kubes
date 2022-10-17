@@ -27,7 +27,7 @@ data:
     allow_any_origin = true
     kvstore_uri = "http://smol-kv.assets.svc:5050"
     #Skip the following urls when using '?url=' parameter
-    url_deny_list = ["https://google.com/search", "http://localhost", "https://example.com/", "http://127.0.0.1", "https://arweave.net/000000000000000000000000000000000000000",  "https://arweave.net/%20#"]
+    url_deny_list = ["https://google.com/search", "http://localhost", "https://example.com/", "http://127.0.0.1",  "https://arweave.net/%20#"]
     #Number of retries when downloading an asset
     max_retries = 5
 
