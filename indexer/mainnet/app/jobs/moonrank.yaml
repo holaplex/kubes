@@ -18,7 +18,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: moonrank
-            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-ab88353
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-9349d52
             env:
             - name: MOONRANK_ENDPOINT
               value: https://moonrank.app
