@@ -19,11 +19,11 @@ spec:
           containers:
           - name: moonrank
             image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-9349d52
-          envFrom:
-          - secretRef:
-              name: meili-creds
-          - secretRef:
-              name: amqp-creds
+            envFrom:
+            - secretRef:
+                name: meili-creds
+            - secretRef:
+                name: amqp-creds
             env:
             - name: MOONRANK_ENDPOINT
               value: https://moonrank.app
