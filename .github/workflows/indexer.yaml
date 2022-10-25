@@ -23,7 +23,7 @@ jobs:
             repo=indexer
             url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
             git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
-            declare -a apps=("graphql" "http-consumer" "search-consumer" "geyser-consumer" "store-config-consumer" "migrator" "job-runner" "burn-fix" "jobs/moonrank")
+            declare -a apps=("graphql" "http-consumer" "search-consumer" "geyser-consumer" "store-config-consumer" "migrator" "job-runner" "burn-fix" "jobs/moonrank" "jobs/dolphin-stats-1d" "jobs/dolphin-stats-full")
             for app in "${apps[@]}"
             do
                echo "Updating ${app} deployment with new image tag"
@@ -35,7 +35,7 @@ jobs:
                   app=http-consumer
                fi
                #Tooling / jobs
-               if [ $app = 'burn-fix' ] || [ $app = 'jobs/moonrank' ];then
+               if [ $app = 'burn-fix' ] || [ $app = 'jobs/moonrank' ] || [ $app = 'jobs/dolphin-stats-1d' ] || [ $app = 'jobs/dolphin-stats-full' ];then
                   app=tools
                fi
                sed -i "s/$version/$app-$git_branch-$git_hash/g" $deployment_file

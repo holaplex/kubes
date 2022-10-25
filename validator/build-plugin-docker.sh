@@ -1,6 +1,6 @@
 #!/bin/bash
 set -e
-git_branch="ryans/increased-limits"
+git_branch="master"
 repo_path="geyser-plugin"
 git clone https://github.com/holaplex/indexer-geyser-plugin $repo_path || git --git-dir=$repo_path/.git pull
 git --git-dir=$repo_path/.git checkout $git_branch

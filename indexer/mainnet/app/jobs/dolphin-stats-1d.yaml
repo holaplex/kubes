@@ -5,7 +5,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  schedule: "*/15 * * * *"
+  schedule: "*/30 * * * *"
   suspend: false
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
@@ -18,7 +18,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: dolphin-stats
-            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-d8ce927
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-59db64f
             env:
             - name: JOBS
               value: "50"
