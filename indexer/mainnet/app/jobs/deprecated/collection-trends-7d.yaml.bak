@@ -1,19 +1,19 @@
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: 30d-collection-trends
+  name: 7d-collection-trends
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  schedule: "57 23 * * *"
-  suspend: false
+  schedule: "18 */5 * * *"
+  suspend: true
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
     spec:
       template:
         metadata:
-          name: 30d-collection-trends
+          name: 7d-collection-trends
         spec:
           restartPolicy: OnFailure
           containers:
@@ -25,7 +25,7 @@ spec:
             - name: GIT_BRANCH
               value: dev
             - name: REPO_PATH
-              value: indexer/mainnet/app/jobs/migrations/2022-09-19-190727_update_collection_trends_30d_floor_price_sales_count_and_mktcap/up.sql
+              value: indexer/mainnet/app/jobs/migrations/2022-09-19-190714_update_collection_trends_7d_floor_price_sales_count_and_mktcap/up.sql
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
