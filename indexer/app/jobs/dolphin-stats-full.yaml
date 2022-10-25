@@ -1,0 +1,45 @@
+apiVersion: batch/v1
+kind: CronJob
+metadata:
+  name: dolphin-stats-full
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  schedule: "30 */1 * * *"
+  suspend: false
+  successfulJobsHistoryLimit: 1
+  failedJobsHistoryLimit: 1
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          name: dolphin-stats-full
+        spec:
+          restartPolicy: OnFailure
+          containers:
+          - name: dolphin-stats
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-master-d8ce927
+            env:
+            - name: FULL
+              value: "true"
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: postgres-creds-url
+                  key: DATABASE_WRITE_URL
+                  optional: false
+            - name: DOLPHIN_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: project-dolphin-creds
+                  key: DOLPHIN_KEY
+                  optional: false
+            command: ["/bin/bash","-c"]
+            args: ["./bin/dolphin-stats"]
+            securityContext:
+              allowPrivilegeEscalation: false
+            imagePullPolicy: IfNotPresent
+          dnsConfig:
+            options:
+            - name: ndots
+              value: "3"
