@@ -33,6 +33,8 @@ spec:
         - secretRef:
             name: twitter-creds
         env:
+        - name: DOLPHIN_KEY
+          value: ""
         - name: ASSET_PROXY_ENDPOINT
           value: "https://assets[n].holaplex.tools/"
         - name: DATABASE_READ_URL
