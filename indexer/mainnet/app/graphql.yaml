@@ -32,6 +32,8 @@ spec:
             name: meili-creds
         - secretRef:
             name: twitter-creds
+        - secretRef:
+            name: project-dolphin-creds
         env:
         - name: ASSET_PROXY_ENDPOINT
           value: "https://assets[n].holaplex.tools/"
