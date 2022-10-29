@@ -36,6 +36,8 @@ spec:
             name: meili-creds
         - secretRef:
             name: twitter-creds
+        - secretRef:
+            name: project-dolphin-creds
         env:
         - name: DATABASE_READ_URL
           valueFrom:
