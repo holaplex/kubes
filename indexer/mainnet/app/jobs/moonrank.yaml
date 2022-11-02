@@ -24,6 +24,8 @@ spec:
                 name: meili-creds
             - secretRef:
                 name: amqp-creds
+            - secretRef:
+                name: moonrank-creds
             env:
             - name: MOONRANK_ENDPOINT
               value: https://moonrank.app
