@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: imgopt
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/imgopt:main-fe288e8
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/imgopt:main-17e7d5a
         imagePullPolicy: IfNotPresent
         command: ["./imgopt"]
         env:
