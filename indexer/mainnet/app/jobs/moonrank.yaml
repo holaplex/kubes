@@ -31,6 +31,12 @@ spec:
               value: https://moonrank.app
             - name: SENDER
               value: mainnet
+            - name: MOONRANK_AUTH
+              valueFrom:
+                secretKeyRef:
+                  name: moonrank-auth
+                  key: MOONRANK_AUTH
+                  optional: false
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
