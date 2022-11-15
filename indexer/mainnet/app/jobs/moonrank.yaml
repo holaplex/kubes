@@ -30,7 +30,7 @@ spec:
             - name: JOBS
               value: "100"
             - name: MOONRANK_ENDPOINT
-              value: https://moonrank.app.
+              value: https://moonrank.app
             - name: SENDER
               value: mainnet
             - name: MOONRANK_AUTH
@@ -53,4 +53,4 @@ spec:
           dnsConfig:
             options:
             - name: ndots
-              value: "3"
+              value: "1"
