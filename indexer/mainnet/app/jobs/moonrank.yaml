@@ -28,7 +28,7 @@ spec:
                 name: moonrank-creds
             env:
             - name: JOBS
-              value: "100"
+              value: "32"
             - name: MOONRANK_ENDPOINT
               value: https://moonrank.app
             - name: SENDER
