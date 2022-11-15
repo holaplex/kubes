@@ -27,8 +27,10 @@ spec:
             - secretRef:
                 name: moonrank-creds
             env:
+            - name: JOBS
+              value: "100"
             - name: MOONRANK_ENDPOINT
-              value: https://moonrank.app
+              value: https://moonrank.app.
             - name: SENDER
               value: mainnet
             - name: MOONRANK_AUTH
