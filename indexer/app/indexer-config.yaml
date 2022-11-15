@@ -3,6 +3,7 @@ kind: ConfigMap
 metadata:
   name: indexer-config
 data:
+  COINGECKO_ENDPOINT: https://api.coingecko.com/api/v3
   IPFS_CDN: https://ipfs.cache.holaplex.com
   PGSSLMODE: require
   RUST_LOG: info
