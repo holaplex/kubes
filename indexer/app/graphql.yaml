@@ -25,7 +25,7 @@ spec:
     spec:
       containers:
       - name: graphql
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-master-86a24de
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:graphql-master-2b8cf92
         env:
         - name: ASSET_PROXY_ENDPOINT
           value: "https://assets[n].holaplex.tools/"
