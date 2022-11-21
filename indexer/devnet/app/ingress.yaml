@@ -11,7 +11,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: graph.devnet.holaplex.tools
+  - host: graphql.devnet.holaplex.tools
     http:
       paths:
       - backend:
@@ -23,4 +23,4 @@ spec:
         pathType: Prefix
   tls:
   - hosts:
-    - graph.devnet.holaplex.tools
+    - graphql.devnet.holaplex.tools
