@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: burn-fix
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-112b050
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-f227773
         env:
         - name: SOLANA_ENDPOINT
           value: https://holaplex-main-9e4a.mainnet.rpcpool.com
