@@ -5,8 +5,8 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  revisionHistoryLimit: 3
-  replicas: 3
+  revisionHistoryLimit: 2
+  replicas: 5
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -42,8 +42,8 @@ spec:
             memory: 128Mi
             cpu: 250m
           limits:
-            memory: 2Gi
-            cpu: 1000m
+            memory: 3Gi
+            cpu: 2000m
         volumeMounts:
         - name: imgopt-config
           mountPath: /home/imgopt/config.toml
@@ -54,8 +54,8 @@ spec:
           httpGet:
             path: /health
             port: 3030
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          initialDelaySeconds: 50
+          periodSeconds: 50
       initContainers:
       - name: fs-permission-update
         image: busybox
