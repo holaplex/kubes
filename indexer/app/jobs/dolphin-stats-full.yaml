@@ -18,7 +18,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: dolphin-stats
-            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-master-2b8cf92
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-master-5c9087c
             env:
             - name: JOBS
               value: "20"
