@@ -6,7 +6,7 @@ metadata:
     reloader.stakater.com/auto: "true"
 spec:
   schedule: "7 */6 * * *"
-  suspend: true
+  suspend: false
   successfulJobsHistoryLimit: 1
   failedJobsHistoryLimit: 1
   jobTemplate:
@@ -24,17 +24,15 @@ spec:
                 name: meili-creds
             - secretRef:
                 name: amqp-creds
+            - secretRef:
+                name: moonrank-creds
             env:
+            - name: JOBS
+              value: "32"
             - name: MOONRANK_ENDPOINT
               value: https://moonrank.app
             - name: SENDER
               value: mainnet
-            - name: MOONRANK_AUTH
-              valueFrom:
-                secretKeyRef:
-                  name: moonrank-auth
-                  key: MOONRANK_AUTH
-                  optional: false
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
@@ -49,4 +47,4 @@ spec:
           dnsConfig:
             options:
             - name: ndots
-              value: "3"
+              value: "2"
