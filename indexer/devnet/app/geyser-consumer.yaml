@@ -21,7 +21,7 @@ spec:
     spec:
       containers:
       - name: geyser-consumer
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-167a46b
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-bd54527
         envFrom:
         - configMapRef:
             name: indexer-config
@@ -44,7 +44,7 @@ spec:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
       - name: geyser-consumer-startup
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-167a46b
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:geyser-consumer-dev-bd54527
         envFrom:
         - configMapRef:
             name: indexer-config
