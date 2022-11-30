@@ -18,7 +18,7 @@ spec:
           restartPolicy: OnFailure
           containers:
           - name: moonrank
-            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-45439e5
+            image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-aea5240
             envFrom:
             - secretRef:
                 name: meili-creds
