@@ -29,7 +29,7 @@ data:
     #Skip the following urls when using '?url=' parameter
     url_deny_list = ["https://google.com/search", "http://localhost", "https://api.stepn.com/", "https://example.com/", "http://127.0.0.1",  "https://arweave.net/%20#"]
     #Number of retries when downloading an asset
-    max_retries = 5
+    max_retries = 10
 
     #max age header for twitter responses (in seconds) (optional)
     twitter.cache.max_age = 86400 #24 hours
