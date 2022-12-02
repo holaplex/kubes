@@ -48,6 +48,9 @@ spec:
         - name: imgopt-config
           mountPath: /home/imgopt/config.toml
           subPath: config.toml
+        - name: cf-creds
+          mountPath: "/home/imgopt/.aws"
+          readOnly: true
         - name: imgopt-data-efs
           mountPath: /home/imgopt/data
         livenessProbe:
@@ -67,6 +70,10 @@ spec:
         - mountPath: /efs-fs
           name: imgopt-data-efs
       volumes:
+        - name: cf-creds
+          secret:
+            secretName: cloudfront-creds
+            optional: false 
         - name: imgopt-config
           configMap:
             name: imgopt-config
