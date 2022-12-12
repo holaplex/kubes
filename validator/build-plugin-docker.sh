@@ -5,7 +5,7 @@ repo_path="geyser-plugin"
 git clone https://github.com/holaplex/indexer-geyser-plugin $repo_path || git --git-dir=$repo_path/.git pull
 git --git-dir=$repo_path/.git checkout $git_branch
 cat <<EOF>plugin.Dockerfile
-FROM rust:1.58.1-slim-bullseye AS build
+FROM rust:1.65.0-slim-bullseye as build
 WORKDIR /build
 
 RUN apt-get update -y && \
@@ -14,16 +14,16 @@ RUN apt-get update -y && \
     libssl-dev \
     libudev-dev \
     pkg-config \
+    git \
   && \
   rm -rf /var/lib/apt/lists/*
 
-COPY rust-toolchain.toml ./
+COPY rust-toolchain.toml Cargo.toml Cargo.lock ./
+COPY crates crates
+COPY .git .git
 
 # Force rustup to install toolchain
 RUN rustc --version
-
-COPY crates crates
-COPY Cargo.toml Cargo.lock ./
 
 RUN cargo build --profile docker \
 -pholaplex-indexer-rabbitmq-geyser
