@@ -1,0 +1,100 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: slot-reindex
+  annotations:
+    reloader.stakater.com/auto: "true"
+spec:
+  revisionHistoryLimit: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: slot-reindex
+  template:
+    metadata:
+      labels:
+        app: slot-reindex
+    spec:
+      containers:
+      - name: dispatcher
+        image: mpwsh/indexer-dispatcher-base:latest
+        env:
+        - name: START
+          value: "167121919"
+        - name: END
+          value: "167848810"
+        - name: DATABASE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds-url
+              key: DATABASE_WRITE_URL
+              optional: false
+        - name: RUST_LOG
+          value: debug
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: amqp-creds
+        - secretRef:
+            name: dialect-creds
+        command: ["/bin/bash","-c"]
+        args: ["/script/dispatcher-run.sh"]
+        securityContext:
+          allowPrivilegeEscalation: false
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: script
+          mountPath: /script/dispatcher-run.sh
+          subPath: run.sh
+      - name: slot-reindex
+        image: mpwsh/indexer-block-reindex:latest
+        envFrom:
+        - configMapRef:
+            name: indexer-config
+        - secretRef:
+            name: meili-creds
+        - secretRef:
+            name: amqp-creds
+        - secretRef:
+            name: dialect-creds
+        env:
+        - name: DATABASE_WRITE_URL
+          valueFrom:
+            secretKeyRef:
+              name: postgres-creds-url
+              key: DATABASE_WRITE_URL
+              optional: false
+        - name: RUST_LOG
+          value: debug
+        command: ["/bin/bash","-c"]
+        args: ["./bin/slot_reindex reindex --network mainnet --selector-config /etc/reindex_config.json --sender reindex"]
+        securityContext:
+          allowPrivilegeEscalation: false
+        imagePullPolicy: IfNotPresent
+        volumeMounts:
+        - name: reindex-config
+          mountPath: /etc/reindex_config.json
+          subPath: reindex_config.json
+      volumes:
+      - name: reindex-config
+        configMap:
+          name: reindex-config   
+      - name: script
+        configMap:
+          name: reindex-dispatcher-run-script
+          defaultMode: 0777
+      dnsConfig:
+        options:
+        - name: ndots
+          value: "3"
+      securityContext:
+        runAsUser: 1000
+        runAsGroup: 3000
+        fsGroup: 2000

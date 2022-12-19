@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: reindex-dispatcher-run-script
+data:
+  run.sh: |
+   #!/bin/bash
+   for i in $(seq $START $END);do
+     ./bin/holaplex-indexer-dispatcher --sender reindex reindex-block $i; 
+   done
