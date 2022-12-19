@@ -5,6 +5,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
+  replicas: 1
   revisionHistoryLimit: 3
   strategy:
     type: RollingUpdate
@@ -34,7 +35,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         - name: RUST_LOG
-          value: debug
+          value: info
         envFrom:
         - configMapRef:
             name: indexer-config
@@ -72,7 +73,7 @@ spec:
               key: DATABASE_WRITE_URL
               optional: false
         - name: RUST_LOG
-          value: debug
+          value: info
         command: ["/bin/bash","-c"]
         args: ["./bin/slot_reindex reindex --network mainnet --selector-config /etc/reindex_config.json --sender reindex"]
         securityContext:

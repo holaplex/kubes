@@ -5,6 +5,14 @@ metadata:
 data:
   run.sh: |
    #!/bin/bash
+   CURRENT=$START
    for i in $(seq $START $END);do
+      echo "Processing block $i"
      ./bin/holaplex-indexer-dispatcher --sender reindex reindex-block $i; 
+     echo "$(($END-$i)) left"
+
+     if [[ $i -ge $END ]];then
+        echo "Completed $i blocks"
+        sleep infinity
+     fi
    done
