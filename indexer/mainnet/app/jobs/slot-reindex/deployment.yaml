@@ -32,6 +32,8 @@ spec:
             name: amqp-creds
         - secretRef:
             name: dialect-creds
+        - configMapRef:
+            name: reindex-config
         env:
         - name: DATABASE_WRITE_URL
           valueFrom:
@@ -39,27 +41,19 @@ spec:
               name: postgres-creds-url
               key: DATABASE_WRITE_URL
               optional: false
-        - name: RUST_LOG
-          value: info
-        - name: START_SLOT
-          value: "167121919"
-        - name: END_SLOT
-          value: "167848810"
-        - name: THREADS
-          value: "16"
         command: ["/bin/bash","-c"]
-        args: ["./bin/slot_reindex reindex --network mainnet --selector-config /etc/reindex_config.json --sender reindex && echo Completed all blocks && sleep infinity"]
+        args: ["echo $(date): starting! && ./bin/slot_reindex reindex --network mainnet --selector-config /etc/programs.json --sender reindex && echo $(date): Completed all blocks && sleep infinity"]
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: Always
         volumeMounts:
-        - name: reindex-config
-          mountPath: /etc/reindex_config.json
-          subPath: reindex_config.json
+        - name: reindex-programs-config
+          mountPath: /etc/programs.json
+          subPath: programs.json
       volumes:
-      - name: reindex-config
+      - name: reindex-programs-config
         configMap:
-          name: reindex-config   
+          name: reindex-programs-config   
       dnsConfig:
         options:
         - name: ndots

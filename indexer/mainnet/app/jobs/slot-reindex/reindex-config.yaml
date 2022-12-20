@@ -1,0 +1,10 @@
+apiVersion: v1
+data:
+  RUST_LOG: "info"
+  END_SLOT: "167848810"
+  START_SLOT: "167121919"
+  THREADS: "16"
+kind: ConfigMap
+metadata:
+  creationTimestamp: null
+  name: reindex-config
