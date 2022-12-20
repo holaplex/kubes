@@ -5,7 +5,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 1
+  replicas: 0
   revisionHistoryLimit: 3
   strategy:
     type: RollingUpdate
@@ -21,39 +21,6 @@ spec:
         app: slot-reindex
     spec:
       containers:
-      - name: dispatcher
-        image: mpwsh/indexer-dispatcher-base:latest
-        env:
-        - name: START
-          value: "167121919"
-        - name: END
-          value: "167848810"
-        - name: DATABASE_URL
-          valueFrom:
-            secretKeyRef:
-              name: postgres-creds-url
-              key: DATABASE_WRITE_URL
-              optional: false
-        - name: RUST_LOG
-          value: info
-        envFrom:
-        - configMapRef:
-            name: indexer-config
-        - secretRef:
-            name: meili-creds
-        - secretRef:
-            name: amqp-creds
-        - secretRef:
-            name: dialect-creds
-        command: ["/bin/bash","-c"]
-        args: ["/script/dispatcher-run.sh"]
-        securityContext:
-          allowPrivilegeEscalation: false
-        imagePullPolicy: IfNotPresent
-        volumeMounts:
-        - name: script
-          mountPath: /script/dispatcher-run.sh
-          subPath: run.sh
       - name: slot-reindex
         image: mpwsh/indexer-block-reindex:latest
         envFrom:
@@ -74,11 +41,17 @@ spec:
               optional: false
         - name: RUST_LOG
           value: info
+        - name: START_SLOT
+          value: "167121919"
+        - name: END_SLOT
+          value: "167848810"
+        - name: THREADS
+          value: "16"
         command: ["/bin/bash","-c"]
-        args: ["./bin/slot_reindex reindex --network mainnet --selector-config /etc/reindex_config.json --sender reindex"]
+        args: ["./bin/slot_reindex reindex --network mainnet --selector-config /etc/reindex_config.json --sender reindex && echo Completed all blocks && sleep infinity"]
         securityContext:
           allowPrivilegeEscalation: false
-        imagePullPolicy: IfNotPresent
+        imagePullPolicy: Always
         volumeMounts:
         - name: reindex-config
           mountPath: /etc/reindex_config.json
@@ -87,10 +60,6 @@ spec:
       - name: reindex-config
         configMap:
           name: reindex-config   
-      - name: script
-        configMap:
-          name: reindex-dispatcher-run-script
-          defaultMode: 0777
       dnsConfig:
         options:
         - name: ndots
