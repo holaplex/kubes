@@ -13,7 +13,7 @@ spec:
   source:
     repoURL: https://github.com/holaplex/kubes.git
     targetRevision: main
-    path: nm/app
+    path: demo/app
   destination:
     server: https://kubernetes.default.svc
     namespace: prod-marketdemo
