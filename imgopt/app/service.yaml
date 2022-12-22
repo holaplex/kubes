@@ -18,3 +18,19 @@ spec:
     port: 443
     targetPort: 3030
   type: LoadBalancer
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: imgopt-ing
+spec:
+  selector:
+    app: imgopt
+  ports:
+  - name: http
+    port: 80
+    targetPort: 3030
+  - name: https
+    port: 443
+    targetPort: 3030
+  type: ClusterIP
