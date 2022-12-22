@@ -8,5 +8,6 @@ data:
   SOLANA_NETWORK: devnet
   SOLANA_SNAPSHOT_COMPRESSION: none
   RPC_PORT: "10899"
-  SOLANA_METRICS_CONFIG: "host=http://influxdb-influxdb2.monitoring:80,db=devnet,u=solana,p=your-custom-pw"
+  SOLANA_METRICS_CONFIG: "host=http://influxdb-exporter.monitoring:9122,db=devnet,u=solana,p=whatever"
   URL: https://api.devnet.solana.com
+

@@ -1,10 +1,12 @@
 ## Description
+
 This repository contains the required Kubernetes manifests to deploy the infrastructure you need to start developing in Solana right away, using the [Indexer Stack](https://github.com/holaplex/indexer) that powers [Holaplex](https://holaplex.com) and many other projects in the ecosystem.
-The steps below will describe how to deploy a *single node* Kubernetes cluster using `k3s` and all the components required to get up and running. Same steps apply if you are doing it locally or in any cloud provider. You should get a *Web2 like* development environment after completing all steps.
+The steps below will describe how to deploy a _single node_ Kubernetes cluster using `k3s` and all the components required to get up and running. Same steps apply if you are doing it locally or in any cloud provider. You should get a _Web2 like_ development environment after completing all steps.
 
 Disclaimer: The deployment is not meant to be used in production as it lacks of high availability.
 
 ## Components
+
 - Solana RPC Node with [Holaplex Geyser Plugin](https://github.com/holaplex/indexer-geyser-plugin) (Optional)
 - Indexer Stack | geyser-plugin - http-indexer - accounts-indexer - search-indexer - graphql-server - legacy-storefronts (Metaplex)
 - IPFS/Arweave/Twitter assets CDN with caching and image processing using [Imgopt](https://github.com/holaplex/imgopt)
@@ -14,24 +16,25 @@ Disclaimer: The deployment is not meant to be used in production as it lacks of 
 - NGINX ingress controller
 - Cert-Manager -with LetsEncrypt- (Optional)
 - Keda (Optional)
-- Example site using indexed data [Holaplex.com](https://github.com/holaplex/holaplex) [todo]
 
 ## Minimum hardware requirements
+
 Hardware requirements are only as a guide to get a stable deployment. You can probably get away with deploying everything on a smaller VM if testing.
 You could also only install what you need and that will also reduce the hardware needed.
 
 Some instructions here will only work on Ubuntu `20.04` | `22.04` machines, but should be enough to understand what needs to be configured in any unix based operating system to make it work.
-|   |Without Solana Node |With Solana Node   |
+| |Without Solana Node |With Solana Node |
 |---|---|---|
-| vCPU  | 8   | 16  |
-| RAM  | 32 GB  | 256 GB  |
-| Disk (SSD)| 500 GB  | 2x 500GB  |
+| vCPU | 8 | 16 |
+| RAM | 32 GB | 256 GB |
+| Disk (SSD)| 500 GB | 2x 500GB |
 
 Keep in mind that whis Solana Node will not be staking, it will be used only as an RPC endpoint and to communicate with the other nodes to retrieve real-time updates that will be fed to the [Indexer Stack](https://github.com/holaplex/indexer).
 
-You can also host the Solana node in a different VM and join that machine to the cluster after deploying  (This option will be described below as well).
+You can also host the Solana node in a different VM and join that machine to the cluster after deploying (This option will be described below as well).
 
 ## Dependencies
+
 - [docker](https://docs.docker.com/engine/install/ubuntu/)
 - [k3s](https://k3s.io/)
 - [kubectl](https://kubernetes.io/docs/tasks/tools/#kubectl)
@@ -43,9 +46,9 @@ Steps to install all dependencies is described in the following steps.
 ## Getting started
 
 ### Preparing your VM
+
 Create a Ubuntu 20.04 VM or spin up a cloud instance in your favourite provider and login as root trough SSH.
 Commands below will add the Docker package repository and install some required OS dependencies.
-
 
 ```bash
 # Installing Docker and jq
@@ -56,6 +59,7 @@ apt install docker-ce jq -y
 ```
 
 ### Installing application dependencies
+
 Helm is a package manager for Kubernetes that will help us install some of the applications that will run in our cluster.
 Kubectl is the CLI used to communicate with the Kubernetes API easily.
 
@@ -91,6 +95,7 @@ Before running the command below, replace `k3s.holaplex.tools` for your own doma
 Check [nip.io](https://nip.io) for more info on how this works.
 
 Install `k3s` using command below. This will start `k3s` as server.
+
 ```bash
 domain=indexer.solar
 #If you want to save your cluster data in a different path, add --data-dir /path/k3s
@@ -99,6 +104,7 @@ curl -sfL https://get.k3s.io | sh -s - server --no-deploy traefik servicelb --tl
 
 Retrieve your `kubectl` config from `/etc/rancher/k3s/k3s.yaml`, move it to your home `~/.kube` folder.
 Select your Kube configuration by changing your `KUBECONFIG` env var.
+
 ```bash
 mkdir -p ~/.kube && sudo cp /etc/rancher/k3s/k3s.yaml ~/.kube/k3s-indexer
 #Add this line to your bash_profile to set permanently.
@@ -109,13 +115,17 @@ export KUBECONFIG=~/.kube/k3s-indexer
 More deployment options (Like HA) available in [k3s docs](https://rancher.com/docs/k3s/latest/en/quick-start/)
 
 ### Validation
+
 Check that your cluster is running
+
 ```bash
 kubectl get pods -n kube-system
 ```
 
 ## MetalLB
+
 Create MetalLB Namespace
+
 ```bash
 kubectl apply -f ./metallb/namespace.yaml
 ```
@@ -130,6 +140,7 @@ sed "s#LB_ADDRESSES#${lb_range}#g" ./metallb/ip-pool.yaml | kubectl apply -f -
 ```
 
 Deploy metallb
+
 ```bash
 kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.13.4/config/manifests/metallb-native.yaml
 #Wait until Metallb is ready
@@ -137,6 +148,7 @@ kubectl wait --for=condition=Ready pod --timeout 60s -n metallb-system -l app=me
 ```
 
 ## NGINX Ingress
+
 ```bash
 #Deploy nginx ingress using type LoadBalancer
 curl -sfL https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/baremetal/deploy.yaml | sed 's#type: NodePort#type: LoadBalancer#g' | kubectl apply -f -
@@ -147,6 +159,7 @@ kubectl wait pod --for=condition=Ready --timeout 60s -n ingress-nginx -l app.kub
 ## Cert Manager
 
 Get the latest version from the releases page and install with `helm`.
+
 ```bash
 latest=$(curl -s https://api.github.com/repos/cert-manager/cert-manager/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
 helm repo add jetstack https://charts.jetstack.io
@@ -160,7 +173,9 @@ helm upgrade --install \
 ```
 
 ## LetsEncrypt Certificate Issuers
-This step is required *only if you need SSL Certs for your ingresses*.
+
+This step is required _only if you need SSL Certs for your ingresses_.
+
 ```bash
 #Email address to use for cert renewal notifications
 email="mariano@holaplex.com"
@@ -168,15 +183,18 @@ sed "s#YOUR_EMAIL#${email}#g" ./cert-manager/certissuers/letsencrypt.yaml | kube
 ```
 
 ## External DNS
+
 ```bash
 latest=$(curl -s https://api.github.com/repos/kubernetes-sigs/external-dns/releases/latest | jq -r .tarball_url | cut -d/ -f8 | sed "s/v//g")
 sed "s#YOUR_ZONE_ID#${cloudflare_zone_id}#g;s#YOUR_API_TOKEN#${cloudflare_api_token}#g" ./external-dns/deploy.yaml | kubectl apply -f  -
 ```
 
 ## Docker registry
+
 This step can be skipped if you are using any other public registry for your indexer images.
 
 ### Deploying
+
 First we need a namespace for our Docker registry deployment.
 
 ```bash
@@ -194,6 +212,7 @@ sed "s#YOUR_DOMAIN#${domain}#g;s#VOLUME_SIZE#${volume_size}#g" ./docker-registry
 ```
 
 Add the newly created registry to your node's cluster config and restart the `k3s` service.
+
 ```bash
 sudo bash -c "cat <<EOF>> /etc/rancher/k3s/registries.yaml
 mirrors:
@@ -205,6 +224,7 @@ sudo systemctl restart k3s
 ```
 
 ## RabbitMQ
+
 RabbitMQ Will be installed using Helm.
 
 ```bash
@@ -227,6 +247,7 @@ helm upgrade rabbitmq --install -n rabbitmq-system --create-namespace bitnami/ra
 > When ready, apply the chart adding the flag `-f values.yaml` when doing `helm install`.
 
 Create virtualhost for the Indexer
+
 ```bash
 rabbitmq_vhost=indexer
 #Create virtual host
@@ -236,12 +257,15 @@ kubectl exec -it rabbitmq-0 -n rabbitmq-system -- rabbitmqctl set_permissions -p
 ```
 
 Create an ingress for RabbitMQ console. Will be available at `rabbit.$domain`.
+
 ```bash
 sed "s#YOUR_DOMAIN#${domain}#g" ./rabbitmq/ingress.yaml | kubectl apply -f -
 ```
 
 ## KEDA
+
 Pod autoscaling for Rabbit Message queues.
+
 ```bash
 helm repo add kedacore https://kedacore.github.io/charts
 helm repo update
@@ -250,6 +274,7 @@ helm install keda kedacore/keda --namespace keda --create-namespace
 ```
 
 ## Meilisearch
+
 Search backend for the indexer.
 Add the Meilisearch Helm repo.
 
@@ -259,6 +284,7 @@ helm repo update
 ```
 
 ### Create master key
+
 ```bash
 kubectl create namespace meilisearch
 meili_token=$(openssl rand -hex 20)
@@ -266,14 +292,18 @@ kubectl create secret generic meili-master-key -n meilisearch --from-literal=MEI
 #Save your meili_token somewhere safe
 #echo $meili_token
 ```
+
 You can also retrieve back the key from the cluster by executing:
+
 ```bash
 kubectl get secret meili-master-key -n meilisearch -o 'jsonpath={.data.MEILI_MASTER_KEY}' | base64 -d
 ```
 
 ### Customizing Meilisearch values.
+
 Open `./meilisearch/values.yaml` file and configure it to suit your needs.
 When ready, trigger the install with the following command:
+
 ```bash
 namespace=meilisearch
 values_path=./meilisearch/values.yaml
@@ -281,19 +311,23 @@ helm upgrade -i meilisearch meilisearch/meilisearch -n $namespace --create-names
 ```
 
 Create an ingress for Meilisearch console. Available at `search.$domain`.
+
 ```bash
 sed "s#YOUR_DOMAIN#${domain}#g" ./meilisearch/ingress.yaml | kubectl apply -f -
 ```
+
 Endpoint will be `search.$domain`
 
 ## Postgres
 
 Clone Zalando's Postgres operator repo
+
 ```bash
 git clone https://github.com/zalando/postgres-operator
 ```
 
 ### Install Postgres operator
+
 ```bash
 helm upgrade --install postgres-operator --create-namespace ./postgres-operator/charts/postgres-operator -n postgres-system
 helm upgrade --install postgres-operator-ui ./postgres-operator/charts/postgres-operator-ui -n postgres-system
@@ -310,7 +344,9 @@ kubectl config set-context --current --namespace=$namespace
 ```
 
 ### Deploy your postgres cluster
+
 Configure variables
+
 ```toml
 team=holaplex
 app=indexer
@@ -324,9 +360,11 @@ min_cpu_count=2
 max_cpu_count=4
 volume_size=300 #in GB
 ```
+
 > Feel free to modify the yaml below before applying.
 
 Deploy the cluster
+
 ```yaml
 cat <<EOF | kubectl apply -f -
 kind: "postgresql"
@@ -361,14 +399,16 @@ spec:
 EOF
 ```
 
-
 ### Validation
+
 ```bash
 kubectl get postgresql/$team-$db_cluster_name -n $namespace -o wide
 ```
+
 Your Postgres instance should show its status as `Running`
 
 Create `indexer` database in Postgres
+
 ```bash
 #Retrieve PostgresQL password
 export PGPASSWORD=$(kubectl get secret $db_user.$team-$db_cluster_name.credentials.postgresql.acid.zalan.do -o 'jsonpath={.data.password}' | base64 -d)
@@ -381,13 +421,16 @@ kubectl run postgresql-client-$(echo $RANDOM | md5sum | head -c4) -n $namespace 
 ## Indexer Stack
 
 ### Building the docker images and pushing to local registry
+
 Run the `build_images.sh` script to clone the indexer stack repository and build the docker images.
+
 ```bash
 registry=registry.$domain ./indexer/build_images.sh
 ```
 
 ### Deploying the indexer stack
-Before deploying, please setup your credentials by following [this readme](indexer/app/readme.md). *TLDR* version with some dummy values can be found below.
+
+Before deploying, please setup your credentials by following [this readme](indexer/app/readme.md). _TLDR_ version with some dummy values can be found below.
 Move to the `indexer` namespace
 
 ```bash
@@ -397,6 +440,7 @@ kubectl config set-context --current --namespace=$namespace
 ```
 
 Create credentials secrets.
+
 ```bash
 rabbitmq_vhost=indexer
 #Rabbit MQ
@@ -416,6 +460,7 @@ kubectl create secret generic twitter-creds --from-literal=TWITTER_BEARER_TOKEN=
 ```
 
 Deploy the indexer stack
+
 ```bash
 kubectl apply -f ./indexer/app
 ```
@@ -462,13 +507,14 @@ EOF
 ## Solana Node deployment
 
 More info on how to deploy a validator (To use as reference is something is not working or want to learn more):
+
 - [How to run a Solana node](https://chainstack.com/how-to-run-a-solana-node/) By Chainstack
 - [Running a Solana validator](https://github.com/project-serum/validators) By Project Serum
 - [Setting up a Solana devnet validator](https://github.com/agjell/sol-tutorials/blob/master/setting-up-a-solana-devnet-validator.md#introduction) Community guide
 - [Starting a validator](https://docs.solana.com/running-validator/validator-start) Official Solana guide
 
-
 Run only on the host that will run the Solana node.
+
 ```bash
 #Increase UDP buffers
 sudo bash -c "cat >/etc/sysctl.d/20-solana-udp-buffers.conf <<EOF
@@ -503,6 +549,7 @@ echo "/swapfile swap swap defaults 0 0" | sudo tee -a /etc/fstab
 ```
 
 Restart the instance
+
 ```bash
 sudo shutdown -r now
 ```
@@ -514,6 +561,7 @@ kubectl label nodes $HOSTNAME validator=true
 ```
 
 ### Download Solana CLI
+
 ```bash
 sh -c "$(curl -sSfL https://release.solana.com/v1.10.5/install)"
 #Add to PATH
@@ -521,6 +569,7 @@ export PATH="$HOME/.local/share/solana/install/active_release/bin:$PATH" >> $HOM
 ```
 
 ### Generate a validator and vote-account keypair.
+
 ```bash
 #chose devnet or mainnet
 network="mainnet"
@@ -534,17 +583,20 @@ solana-keygen new -o vote-account-keypair.json --silent --no-bip39-passphrase
 ```
 
 ### Create configMap with keypairs
+
 ```bash
 kubectl create cm validator-keypairs --from-file=validator-keypair.json --from-file=vote-account-keypair.json
 ```
 
 ### Create certificates from ca-certificates to deployment
+
 ```bash
 #get ca-certificates from /etc/ssl/certs/ca-certificates.crt after installing 'ca-certificates' package on your vm, or use the one provisioned in the validator folder.
 kubectl create cm ca-certificates --from-file=ca-certificates.crt
 ```
 
 ### Create geyser-config configmap
+
 ```bash
 cat <<EOF>> ./$network/geyser-config.json
 {
@@ -557,7 +609,7 @@ cat <<EOF>> ./$network/geyser-config.json
     "limit": 16
   },
   "metrics": {
-   "config": "host=http://influxdb-influxdb2.$namespace:80,db=$network,u=solana,p=your-custom-pw"
+   "config": "host=http://influxdb-exporter.monitoring:9122,db=$network,u=solana,p=your-custom-pw"
   },
   "accounts": {
     "owners": [
@@ -591,7 +643,9 @@ cat <<EOF>> ./$network/geyser-config.json
 }
 EOF
 ```
+
 Create the configMap.
+
 ```bash
 kubectl create cm geyser-plugin-config --from-file=./$network/geyser-config.json
 ```
@@ -600,12 +654,14 @@ kubectl create cm geyser-plugin-config --from-file=./$network/geyser-config.json
 
 Create a mount folder for the validator data and set the variable `validator_data_path` accordingly.
 Ideally, you'll use a separate SSD for the ledger.
+
 ```bash
 validator_data_path="/mnt/<your-drive-name>/validator/$network"
 sudo mkdir -p $validator_data_path && sudo chown $USER:$USER $validator_data_path
 ```
 
 Create PersistentVolumes for the validator deployment and geyser plugin
+
 ```yaml
 cat <<EOF | kubectl apply -f -
 apiVersion: v1
@@ -662,21 +718,25 @@ EOF
 ```
 
 Create a `configMap` with a startup script
+
 ```bash
 kubectl create cm startup-script --from-file=./$network/startup.sh
 ```
 
 Deploy the validator
+
 ```bash
 kubectl apply -f ./$network/deploy.yaml -n $namespace
 ```
 
 Expose the RPC endpoint (optional)
+
 ```bash
 kubectl apply -f ./$network/service.yaml -n $namespace
 ```
 
 Create an ingress for the RPC Http endpoint
+
 ```yaml
 cat <<EOF | kubectl apply -f -
 apiVersion: networking.k8s.io/v1
@@ -714,11 +774,13 @@ EOF
 ### Build the geyser plugin using Docker
 
 Clone the repo
+
 ```bash
 git clone https://github.com/holaplex/indexer-geyser-plugin ../indexer-geyser-plugin
 ```
 
 Build the plugin
+
 ```bash
 docker build -t geyser-plugin-builder --file plugin.Dockerfile ../indexer-geyser-plugin
 ```
@@ -733,12 +795,13 @@ kubectl cp -c geyser-plugin-loader libholaplex_indexer_rabbitmq_geyser.so $names
 ```
 
 Wait for the validator to be ready
+
 ```bash
 kubectl wait --for=condition=Ready pod --timeout 60s -n $namespace -l app=validator
 ```
 
-
 ### Validation
+
 ```bash
 #Checking the logs
 kubectl logs -f $pod_name -n $namespace -c validator
@@ -748,15 +811,17 @@ curl --silent localhost:8899 -X POST -H "Content-Type: application/json" -d '{"j
 ```
 
 Run `solana catchup` from the validator's container.
+
 ```bash
 kubectl exec -it $pod_name -n $namespace -c validator -- solana catchup /root/validator-keypair.json
 ```
 
 ## Monitoring
+
 Install `metrics-server` to get `kubectl top`.
+
 ```bash
 kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 ```
-
 
 More advanced monitoring deployments will be added in the future, using Prometheus, Grafana and some sweet dashboards.

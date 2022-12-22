@@ -30,9 +30,13 @@ spec:
           - name: geyser-plugin
             mountPath: /geyser
       containers:
-      - image: solanalabs/solana:v1.10.38
+      - image: solanalabs/solana:v1.13.5
         name: watchtower
-        command: ["solana-watchtower"]
+        args: 
+        - --url
+        - http://validator-rpc.devnet-solana.svc:10899
+        command:
+        - solana-watchtower
         envFrom:
         - configMapRef:
             name: validator-config
@@ -40,14 +44,14 @@ spec:
         - name: ca-certificates
           mountPath: /etc/ssl/certs/ca-certificates.crt
           subPath: ca-certificates.crt
-      - image: solanalabs/solana:v1.10.38
+      - image: solanalabs/solana:v1.13.5
         resources:
           limits:
-            memory: "250Gi"
-            cpu: "20000m"
+            memory: "194Gi"
+            cpu: "10000m"
           requests:
-            memory: "230Gi"
-            cpu: "8000m"
+            memory: "110Gi"
+            cpu: "5000m"
         imagePullPolicy: IfNotPresent
         name: validator
         envFrom:

@@ -4,7 +4,7 @@ metadata:
   name: validator-data-pv
 spec:
   capacity:
-    storage: 500Gi
+    storage: 700Gi
   volumeMode: Filesystem
   accessModes:
   - ReadWriteOnce
@@ -34,7 +34,7 @@ spec:
    - ReadWriteOnce
  resources:
    requests:
-      storage: 500Gi
+      storage: 700Gi
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim

@@ -8,7 +8,7 @@ solana-validator  \
 --known-validator=dv2eQHeP4RFrJZ6UeiZWoc3XTtmtZCUKxxCApCDcRNV \
 --known-validator=dv4ACNkpYPcE3aKmYDqZm9G5EB3J4MRoeE7WNDRBVJB \
 --known-validator=dv3qDFk1DTF36Z62bNvrCXe9sKATA6xvVy6A798xxAS \
---ledger=ledger \
+--ledger=/ledger \
 --rpc-port=10899 \
 --full-rpc-api \
 --entrypoint=entrypoint.devnet.solana.com:8001 \

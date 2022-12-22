@@ -6,8 +6,6 @@ curl --silent $endpoint -X POST -H "Content-Type: application/json" -d '{"jsonrp
 }
 
 export KUBECONFIG=~/.kube/do-k3s-index
-#echo "starting port-forward"
-#kubectl port-forward svc/validator -n mainnet-solana --context home-k3s 8899:8899 &> /dev/null
 pid=$(echo $!)
 
 while true;do

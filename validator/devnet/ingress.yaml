@@ -3,12 +3,15 @@ kind: Ingress
 metadata:
   annotations:
     cert-manager.io/cluster-issuer: letsencrypt-prod
-    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/cors-allow-headers: solana-client,DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin
+    nginx.ingress.kubernetes.io/cors-allow-methods: POST, OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
     nginx.ingress.kubernetes.io/enable-cors: "true"
-    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
-    nginx.ingress.kubernetes.io/cors-allow-methods: "POST, OPTIONS"
-    nginx.ingress.kubernetes.io/cors-allow-headers: "solana-client,DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin"
-  name: validator-rpc-http
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+  name: validator-rpc
+  namespace: devnet-solana
 spec:
   ingressClassName: nginx
   rules:
@@ -17,10 +20,54 @@ spec:
       paths:
       - backend:
           service:
-            name: validator
+            name: validator-rpc
             port:
               number: 10899
         path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - rpc.devnet.holaplex.tools
+    secretName: validator-tls
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    nginx.ingress.kubernetes.io/cors-allow-headers: solana-client,DNT,X-CustomHeader,X-LANG,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,X-Api-Key,X-Device-Id,Access-Control-Allow-Origin
+    nginx.ingress.kubernetes.io/cors-allow-methods: POST, OPTIONS
+    nginx.ingress.kubernetes.io/cors-allow-origin: '*'
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/force-ssl-redirect: "false"
+    nginx.ingress.kubernetes.io/proxy-read-timeout: "3600"
+    nginx.ingress.kubernetes.io/proxy-send-timeout: "3600"
+    nginx.ingress.kubernetes.io/server-snippets: |
+      location /ws {
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_http_version 1.1;
+        proxy_set_header X-Forwarded-Host $http_host;
+        proxy_set_header X-Forwarded-Proto $scheme;
+        proxy_set_header X-Forwarded-For $remote_addr;
+        proxy_set_header Host $host;
+        proxy_set_header Connection "upgrade";
+        proxy_cache_bypass $http_upgrade;
+      }
+    nginx.ingress.kubernetes.io/websocket-services: validator-ws
+  name: validator-ws
+  namespace: devnet-solana
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: rpc.devnet.holaplex.tools
+    http:
+      paths:
+      - backend:
+          service:
+            name: validator-ws
+            port:
+              number: 10900
+        path: /ws
         pathType: Prefix
   tls:
   - hosts:
