@@ -1,0 +1,82 @@
+affinity: {}
+
+extraEnv: {}
+
+extraArgs:
+- --timestamps
+
+fullnameOverride: ""
+
+image:
+  pullPolicy: IfNotPresent
+  repository: prom/influxdb-exporter
+  tag: v0.11.1
+
+imagePullSecrets: []
+
+listenAddress: "9122"
+telemetryPath: "/metrics"
+exporterTelemetryPath: "/metrics/exporter"
+sampleExpiry: "5m"
+UDPBindAddress: "9122"
+logLevel: "info"
+logFormat: "logfmt"
+
+livenessProbe:
+  httpGet:
+    path: /
+    port: metrics
+  initialDelaySeconds: 10
+
+nameOverride: "influxdb-exporter"
+
+nodeSelector: {}
+
+priorityClassName: ""
+
+readinessProbe:
+  httpGet:
+    path: /
+    port: metrics
+  initialDelaySeconds: 10
+
+replicas: 1
+
+resources: {}
+# limits:
+#   cpu: 250m
+#   memory: 192Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
+
+# Volumes that will be mounted into the exporter pod
+volumeMounts: []
+
+# Volumes that will be attached to the exporter deployment
+volumes: []
+
+securityContext: {}
+
+service:
+  labels: {}
+  annotations: {}
+  type: ClusterIP
+
+serviceAccount:
+  create: true
+  # If create is true and name is not set, then a name is generated using the
+  # fullname template.
+  name:
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  scrapeTimeout: 10s
+  namespace:
+  additionalLabels: {}
+  targetLabels: []
+  metricRelabelings: []
+
+tolerations: []
+

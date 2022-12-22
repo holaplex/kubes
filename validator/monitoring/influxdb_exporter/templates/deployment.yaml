@@ -1,0 +1,91 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "prometheus-influxdb-exporter.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "prometheus-influxdb-exporter.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    helm.sh/chart: {{ include "prometheus-influxdb-exporter.chart" . }}
+  {{- if .Values.annotations }}
+  annotations:
+    {{- toYaml .Values.annotations | nindent 4 }}
+  {{- end }}
+spec:
+  replicas: {{ .Values.replicas }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "prometheus-influxdb-exporter.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      {{- if .Values.annotations }}
+      annotations:
+          {{- toYaml .Values.annotations | nindent 8 }}
+      {{- end }}
+      labels:
+        app.kubernetes.io/name: {{ include "prometheus-influxdb-exporter.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+      {{- if .Values.labels }}
+          {{- toYaml .Values.labels | nindent 8 }}
+      {{- end }}
+    spec:
+      serviceAccountName: {{ template "prometheus-influxdb-exporter.serviceAccountName" . }}
+      containers:
+      - name: influxdb-exporter
+        {{- if .Values.extraEnv }}
+        env:
+        {{- range $key, $value := .Values.extraEnv }}
+          - name: "{{ $key }}"
+            value: "{{ $value }}"
+        {{- end }}
+        {{- end }}
+        image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+        args:
+        - --web.listen-address={{ printf ":%s" .Values.listenAddress }}
+        - --web.telemetry-path={{ .Values.telemetryPath }}
+        - --web.exporter-telemetry-path={{.Values.exporterTelemetryPath }}
+        - --influxdb.sample-expiry={{ .Values.sampleExpiry }}
+        - --udp.bind-address={{ printf ":%s" .Values.UDPBindAddress }}
+        - --log.level={{ .Values.logLevel }}
+        - --log.format={{ .Values.logFormat }}
+        {{- toYaml .Values.extraArgs | nindent 8 }}
+        ports:
+        - name: metrics
+          containerPort: {{ .Values.listenAddress }} 
+          protocol: TCP
+        livenessProbe:
+          {{- toYaml .Values.livenessProbe | nindent 10 }}
+        readinessProbe:
+          {{- toYaml .Values.readinessProbe | nindent 10 }}
+        resources:
+          {{- toYaml .Values.resources | nindent 10 }}
+        {{- if .Values.securityContext }}
+        securityContext:
+          {{- toYaml .Values.securityContext | nindent 10 }}
+        {{- end }}
+      {{- if .Values.affinity }}
+      affinity:
+        {{- toYaml .Values.affinity | nindent 8 }}
+      {{- end }}
+      {{- if .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml .Values.imagePullSecrets | nindent 8 }}
+      {{- end }}
+      {{- if .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      {{- end }}
+      {{- if .Values.priorityClassName }}
+      priorityClassName: {{ .Values.priorityClassName }}
+      {{- end }}
+      terminationGracePeriodSeconds: 30
+      {{- if .Values.tolerations }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end }}
+      {{- if .Values.volumes }}
+      volumes:
+        {{- toYaml .Values.volumes | nindent 8 }}
+      {{- end }}

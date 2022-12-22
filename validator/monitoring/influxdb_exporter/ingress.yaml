@@ -1,0 +1,24 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: influxdb-exporter
+  namespace: monitoring
+spec:
+  ingressClassName: nginx
+  rules:
+  - host: devnet.validator.holaplex.tools
+    http:
+      paths:
+      - backend:
+          service:
+            name: influxdb-exporter
+            port:
+              name: metrics
+        path: /metrics
+        pathType: Prefix
+  tls:
+  - hosts:
+    - devnet.validator.holaplex.tools
+    secretName: influxdb-exporter-tls
