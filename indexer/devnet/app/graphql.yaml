@@ -18,6 +18,7 @@ spec:
   template:
     metadata:
       annotations:
+        config.linkerd.io/proxy-log-level: warn
         linkerd.io/inject: enabled
       labels:
         app: graphql
