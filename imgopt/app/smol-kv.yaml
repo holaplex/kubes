@@ -16,6 +16,7 @@ spec:
     metadata:
       annotations:
         linkerd.io/inject: enabled
+        config.linkerd.io/proxy-log-level: warn
       labels:
         app: smol-kv
     spec:
