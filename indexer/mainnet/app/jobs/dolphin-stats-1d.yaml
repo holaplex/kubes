@@ -21,7 +21,7 @@ spec:
             image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-dev-0ba79d5
             env:
             - name: JOBS
-              value: "75"
+              value: "32"
             - name: DATABASE_URL
               valueFrom:
                 secretKeyRef:
