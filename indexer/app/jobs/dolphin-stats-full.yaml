@@ -21,7 +21,7 @@ spec:
             image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/indexer:tools-master-d8d77ad
             env:
             - name: JOBS
-              value: "20"
+              value: "8"
             - name: FULL
               value: "true"
             - name: DATABASE_URL
