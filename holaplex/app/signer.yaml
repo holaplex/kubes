@@ -4,7 +4,7 @@ metadata:
   annotations:
   name: hola-signer
 spec:
-  replicas: 2
+  replicas: 0
   strategy:
     type: RollingUpdate
     rollingUpdate:
