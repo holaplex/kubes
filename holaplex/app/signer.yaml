@@ -6,7 +6,7 @@ metadata:
   name: hola-signer
 spec:
   revisionHistoryLimit: 3
-  replicas: 2
+  replicas: 0
   strategy:
     type: RollingUpdate
     rollingUpdate:
