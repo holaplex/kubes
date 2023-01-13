@@ -31,6 +31,8 @@ spec:
         - name: ASSET_PROXY_ENDPOINT
           value: "https://assets[n].holaplex.tools/"
         envFrom:
+        - secretRef:
+            name: alchemy-solana
         - configMapRef:
             name: indexer-config
         - secretRef:
