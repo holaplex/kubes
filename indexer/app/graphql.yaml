@@ -32,7 +32,7 @@ spec:
           value: "https://assets[n].holaplex.tools/"
         envFrom:
         - secretRef:
-            name: alchemy-solana
+            name: rpc-endpoint
         - configMapRef:
             name: indexer-config
         - secretRef:
