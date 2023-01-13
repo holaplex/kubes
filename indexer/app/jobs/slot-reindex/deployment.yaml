@@ -25,6 +25,8 @@ spec:
         image: mpwsh/indexer-block-reindex:latest
         envFrom:
         - configMapRef:
+            name: alchemy-solana
+        - configMapRef:
             name: indexer-config
         - secretRef:
             name: meili-creds
