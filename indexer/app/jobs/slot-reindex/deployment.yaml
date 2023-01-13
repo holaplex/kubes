@@ -24,7 +24,7 @@ spec:
       - name: slot-reindex
         image: mpwsh/indexer-block-reindex:latest
         envFrom:
-        - configMapRef:
+        - secretRef:
             name: alchemy-solana
         - configMapRef:
             name: indexer-config
