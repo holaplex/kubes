@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: slot-reindex
-        image: mpwsh/indexer-block-reindex:latest
+        image: mpwsh/indexer-block-reindex:v1
         envFrom:
         - secretRef:
             name: alchemy-solana

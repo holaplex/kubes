@@ -3,7 +3,7 @@ data:
   RUST_LOG: "info"
   START_SLOT: "167848808"
   END_SLOT: "172183582"
-  THREADS: "16"
+  THREADS: "8"
 kind: ConfigMap
 metadata:
   creationTimestamp: null
