@@ -37,6 +37,8 @@ spec:
         - configMapRef:
             name: reindex-config
         env:
+        - name: RUST_LOG
+          value: debug
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
