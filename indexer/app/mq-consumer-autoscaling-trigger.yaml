@@ -29,7 +29,7 @@ spec:
       protocol: amqp
       queueName: mainnet.startup-all.accounts.indexer
       mode: QueueLength
-      value: "20000"
+      value: "1500"
       metricName: geyser-consumer-scaling
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
@@ -38,7 +38,7 @@ spec:
       protocol: amqp
       queueName: mainnet.accounts.indexer
       mode: QueueLength
-      value: "20000"
+      value: "1500"
       metricName: geyser-consumer-scaling
     authenticationRef:
       name: keda-trigger-auth-rabbitmq-conn
