@@ -5,7 +5,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   strategy:
     type: RollingUpdate
@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: slot-reindex
-        image: mpwsh/indexer-block-reindex:v1
+        image: mpwsh/indexer-block-reindex:v0.2
         envFrom:
         - secretRef:
             name: alchemy-solana
