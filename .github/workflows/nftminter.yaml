@@ -1,0 +1,36 @@
+name: Remote build
+
+on:
+  push:
+    branches: [ main, dev ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Updating deployment manifests
+    if: ${{ !contains(github.event.head_commit.message, '#k8s') }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+      - name: Update deployment image version
+        run: |
+            git_branch=${GITHUB_REF##*/}
+            repo=BizDevMinter
+            url=https://${{ secrets.ACTIONS_TOKEN}}@github.com/holaplex/$repo
+            git_hash=$(git ls-remote $url $git_branch| cut -c1-7)
+            #Frontend
+            app=frontend
+            deployment_file="./$repo/app/$app.yaml"
+            image_tag=$(cat $deployment_file | grep -i image\: | awk {'print $2'} | cut -d: -f2)
+            echo "Updating ${app} deployment with new image tag"
+            sed -i "s/$image_tag/$app-$git_branch-$git_hash/" $deployment_file
+
+      - name: Commit and push changes
+        uses: devops-infra/action-commit-push@master
+        with:
+          github_token: ${{ secrets.ACTIONS_TOKEN}}
+          commit_message: Updated deployment image version
