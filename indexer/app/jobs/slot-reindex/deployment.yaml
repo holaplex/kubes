@@ -25,7 +25,7 @@ spec:
         image: mpwsh/indexer-block-reindex:v0.2
         envFrom:
         - secretRef:
-            name: alchemy-solana
+            name: rpc-endpoint
         - configMapRef:
             name: indexer-config
         - secretRef:
