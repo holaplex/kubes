@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/web3auth:frontend-dev-cc90d4e
+        image: 011737333588.dkr.ecr.us-east-1.amazonaws.com/web3auth:frontend-dev-a92957f
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 3000
