@@ -32,6 +32,8 @@ spec:
             name: amqp-creds
         - secretRef:
             name: dialect-creds
+        - secretRef:
+            name: rpc-endpoint
         env:
         - name: DATABASE_WRITE_URL
           valueFrom:
@@ -55,6 +57,8 @@ spec:
             name: amqp-creds
         - secretRef:
             name: dialect-creds
+        - secretRef:
+            name: rpc-endpoint
         env:
         - name: DATABASE_WRITE_URL
           valueFrom:
@@ -67,7 +71,6 @@ spec:
         securityContext:
           allowPrivilegeEscalation: false
         imagePullPolicy: IfNotPresent
-
       dnsConfig:
         options:
         - name: ndots
