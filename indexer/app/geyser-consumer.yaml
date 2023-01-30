@@ -35,6 +35,8 @@ spec:
         - secretRef:
             name: rpc-endpoint
         env:
+        - name: RUST_LOG
+          value: debug
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
@@ -60,6 +62,8 @@ spec:
         - secretRef:
             name: rpc-endpoint
         env:
+        - name: RUST_LOG
+          value: debug
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
