@@ -5,7 +5,7 @@ metadata:
   annotations:
     reloader.stakater.com/auto: "true"
 spec:
-  replicas: 0
+  replicas: 1
   revisionHistoryLimit: 3
   strategy:
     type: RollingUpdate
@@ -25,7 +25,7 @@ spec:
         image: mpwsh/indexer-block-reindex:v0.2
         envFrom:
         - secretRef:
-            name: rpc-endpoint
+            name: alchemy-solana
         - configMapRef:
             name: indexer-config
         - secretRef:
