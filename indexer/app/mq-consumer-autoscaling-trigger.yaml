@@ -21,8 +21,8 @@ spec:
     #containerName: {container-name}  #Optional. Default: deployment.spec.template.spec.containers[0]
   pollingInterval: 60
   cooldownPeriod:  300
-  minReplicaCount: 1
-  maxReplicaCount: 5
+  minReplicaCount: 3
+  maxReplicaCount: 7
   triggers:
   - type: rabbitmq
     metadata:
