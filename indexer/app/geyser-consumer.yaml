@@ -33,7 +33,7 @@ spec:
         - secretRef:
             name: dialect-creds
         - secretRef:
-            name: alchemy-solana
+            name: rpc-endpoint
         env:
         - name: RUST_LOG
           value: info
@@ -60,7 +60,7 @@ spec:
         - secretRef:
             name: dialect-creds
         - secretRef:
-            name: alchemy-solana
+            name: rpc-endpoint
         env:
         - name: RUST_LOG
           value: info
