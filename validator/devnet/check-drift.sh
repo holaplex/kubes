@@ -19,7 +19,7 @@ if [ -z $local_validator ];then
 if [[ $prev_slot != $local_validator ]];then
 updated_time=$(date +%s)
 main_validator=$(get_slot "https://api.devnet.solana.com")
-echo slots behind: $(( $main_validator - $local_validator ))
+echo "[$(date "+%D %T")] slots behind: $(( $main_validator - $local_validator ))"
 
 else
   stuck_secs=$(( $(date +%s) - $updated_time ))

@@ -32,6 +32,8 @@ spec:
         - secretRef:
             name: dialect-creds
         env:
+        - name: RUST_LOG
+          value: info
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
@@ -55,6 +57,8 @@ spec:
         - secretRef:
             name: dialect-creds
         env:
+        - name: RUST_LOG
+          value: info
         - name: DATABASE_WRITE_URL
           valueFrom:
             secretKeyRef:
