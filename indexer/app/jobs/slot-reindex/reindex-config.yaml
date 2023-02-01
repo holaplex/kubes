@@ -1,8 +1,10 @@
 apiVersion: v1
 data:
   RUST_LOG: "info"
-  START_SLOT: "174642850"
-  END_SLOT: "175240849"
+  #START_SLOT: "174833830"
+  #END_SLOT: "175240849"
+  START_SLOT: "175381900"
+  END_SLOT: "175382000"
   THREADS: "16"
 kind: ConfigMap
 metadata:
