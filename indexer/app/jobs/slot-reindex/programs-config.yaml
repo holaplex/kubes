@@ -3,7 +3,11 @@ data:
   programs.json: |
     {
       "programs": [
-        "RwDDvPp7ta9qqUwxbBfShsNreBaSsKvFcHzMxfBC3Ki"
+        "M2mx93ekt1fmXSVkTrUL9xVFHkmME8HTUi5Cyc5aF7K",
+        "MEisE1HzehtrDpAAT8PnLHjpSSkRYakotTuJRPjTpo8",
+        "hausS13jsjafwWwGqZTUQRmWyvyxn9EQpqMwV1PBBmk",
+        "RwDDvPp7ta9qqUwxbBfShsNreBaSsKvFcHzMxfBC3Ki",
+        "TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
       ]
     }
 kind: ConfigMap
