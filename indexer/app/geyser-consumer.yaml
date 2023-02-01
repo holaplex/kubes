@@ -60,7 +60,7 @@ spec:
         - secretRef:
             name: dialect-creds
         - secretRef:
-            name: rpc-endpoint
+            name: alchemy-solana
         env:
         - name: RUST_LOG
           value: info
