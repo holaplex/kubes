@@ -5,7 +5,7 @@ metadata:
     reloader.stakater.com/auto: "true"
   name: solana-rpc-reverse
 spec:
-  replicas: 1
+  replicas: 0
   strategy:
     type: RollingUpdate
     rollingUpdate:
