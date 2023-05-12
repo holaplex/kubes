@@ -24,7 +24,7 @@ data:
     #Skip certain images from processing (optional)
     #skip_list = ["bafybeih6zvkw6fenaprelv45b4zjzazi3mvogvkq6ws75ywyphjk4iyqwi"]
     #Enable '?url=' query parameter
-    allow_any_origin = true
+    allow_any_origin = false
     kvstore_uri = "http://smol-kv.assets.svc:5050"
     #Skip the following urls when using '?url=' parameter
     url_deny_list = ["https://google.com/search", "http://localhost", "https://api.stepn.com/", "https://example.com/", "http://127.0.0.1",  "https://arweave.net/%20#"]
